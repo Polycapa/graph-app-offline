@@ -1,0 +1,13 @@
+{
+  "name": "graph-maker",
+  "productName": "Graph Maker",
+  "version": "1.0.0",
+  "description": "Make graph easily",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^1.0.1"
+  }
+}

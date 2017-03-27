@@ -1,0 +1,90 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="node-add">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .form {
+        @apply(--layout-vertical);
+        padding: 10px;
+        width: 150px;
+      }
+
+      paper-button {
+        color: white;
+        background: var(--primary-color);
+      }
+
+      .color {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        margin: 10px;
+      }
+    </style>
+    <div class="form">
+      <paper-input label="X" type="number" step="0.1" required error-message="Required" id="x"></paper-input>
+      <paper-input label="Y" type="number" step="0.1" required error-message="Required" id="y"></paper-input>
+      <paper-input label="Label" id="label"></paper-input>
+      <div class="color">
+        <input type="color" value="#ec5148" name="textcolor" id="color">
+      </div>
+      <paper-button raised on-click="addNode">Add node</paper-button>
+    </div>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'node-add',
+        listeners: {
+          'keyup': '_handleKeyUp'
+        },
+        _handleKeyUp: function (e) {
+          if (e.keyCode === 13) {
+            this.addNode();
+          }
+        },
+        addNode: function() {
+          if (this.$.x.validate() && this.$.y.validate()) {
+            var node = {
+              x: this.$.x.value,
+              y: this.$.y.value,
+              label: this.$.label.value,
+              color: this.$.color.value
+            };
+
+            this.$.x.value = '';
+            this.$.y.value = '';
+            this.$.label.value = '';
+            this.$.color.value = '#ec5148';
+
+            this.fire('add-node', {
+              node: node
+            });
+          }
+        },
+        addData: function (position) {
+          this.$.x.value = position.x.toFixed(1);
+          this.$.y.value = position.y.toFixed(1);
+        }
+      });
+    })();
+  </script>
+</dom-module>
