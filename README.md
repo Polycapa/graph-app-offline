@@ -15,11 +15,11 @@ TODO
     - [x] On click
         - [ ] Creation window
 - [x] Move node
-- Delete node
-- Delete edge
-- Legend
-- Drag and drop window
-- LocalStorage
-- PNG export
-- File export
-- Read only URL (export a graph into an url)
+- [x] Delete node
+- [x] Delete edge
+- [ ] Legend
+- [ ] Drag and drop window
+- [ ] LocalStorage
+- [ ] PNG export
+- [ ] File export
+- [ ] Read only URL (export a graph into an url)
