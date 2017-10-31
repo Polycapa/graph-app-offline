@@ -330,7 +330,7 @@ class Graph {
 
         if (target === this.cy) {
             // Right click on background, insert node
-            this.beforeNodeCreation();
+            this.beforeNodeCreation(position.y, position.x);
         } else if (target.isNode()) {
             // Remove node
             this.remove(this.getNodeData(target).id);

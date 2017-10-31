@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../addnode-dialog/addnode-dialog.html">
 
 <dom-module id="graph-app">
   <template>
@@ -13,6 +15,9 @@
         background: red;
       }
     </style>
+
+    <addnode-dialog id="nodeDialog"></addnode-dialog>
+
     <div id="graph">
 
     </div>
@@ -32,12 +37,15 @@
         return 'graph-app';
       }
       static get properties() {
-        return {};
+        return {
+          graph: Object
+        };
       }
 
       ready() {
         super.ready();
-        let graph = new Graph(cytoscape, this.$.graph);
+        this.graph = new Graph(cytoscape, this.$.graph);
+        this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
       }
     }
 

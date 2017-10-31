@@ -1,0 +1,94 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+
+<dom-module id="addnode-dialog">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                --top-pos: 100px;
+                --left-pos: 100px;
+            }
+
+            #form {
+                background: white;
+                width: 300px;
+                min-height: 200px;
+                border-radius: 3px;
+                padding: 5px;
+
+                position: fixed;
+                top: var(--top-pos);
+                left: var(--left-pos);
+                z-index: 2;
+
+                @apply(--shadow-elevation-8dp);
+            }
+        </style>
+
+        <div id="form" hidden>
+            <div class="vertical layout">
+                <paper-input label="Label"></paper-input>
+                <!-- <paper-swatch-picker color="{{data.color::input}}"></paper-swatch-picker> -->
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        /**
+         * `addnode-dialog` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class AddNodeDialog extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'addnode-dialog';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    data: {
+                        type: Object,
+                        value: () => {
+                            return {
+                                label: '',
+                                color: '#ff0000'
+                            }
+                        }
+                    }
+                };
+            }
+
+            open(top, left) {
+                if (top) {
+                    this.updateStyles({
+                        '--top-pos': top + 'px'
+                    });
+                }
+
+                if (left) {
+                    this.updateStyles({
+                        '--left-pos': left + 'px'
+                    });
+                }
+
+                console.log(top, left);
+                console.log('Open node dialog');
+                this.$.form.hidden = false;
+            }
+        }
+
+        window.customElements.define(AddNodeDialog.is, AddNodeDialog);
+    </script>
+</dom-module>
