@@ -1,9 +1,4 @@
-import { Node } from './node';
-
 class Graph {
-
-    private cy: any;
-    private _nodeColor: string;
 
     // Init graph with cytoscape library
     constructor(cytoscape, container, style) {
@@ -46,6 +41,7 @@ class Graph {
         }
     }
 
+    //region Style
     get nodeColor() {
         return this._nodeColor || 'yellow';
     }
@@ -61,6 +57,8 @@ class Graph {
         this._nodeColor = value;
     }
 
+    //endregion
+
     get nodes() {
         return this.cy.json().elements.nodes;
     }
@@ -69,7 +67,8 @@ class Graph {
         return this.cy.json().elements.edges;
     }
 
-    get lastId() {
+    //region Node gestion
+    get lastNodeId() {
         var nodes = this.nodes;
 
         if (!nodes) {
@@ -89,26 +88,26 @@ class Graph {
         return lastId;
     }
 
-    get nextId() {
-        return this.lastId !== undefined ? this.lastId + 1 : 0;
+    get nextNodeId() {
+        return this.lastNodeId !== undefined ? this.lastNodeId + 1 : 0;
     }
+
 
     getNodeData(node) {
         return node.data;
     }
 
+    //endregion
+
+    //region Graph insertion
     addNode(x, y, label, color) {
         // Set node data
         label = label || '';
         color = color || this.nodeColor;
 
-        var nextId = this.nextId;
-        if (!label) {
-            label = `Node ${nextId}`
-        }
-        var nodeId = `n${nextId}`;
+        var nextId = this.nextNodeId;
 
-        let node = new Node(this.nextId, x, y);
+        let node = new Node(nextId, x, y);
         node.label = label;
         node.color = color || this.nodeColor;
 
@@ -120,4 +119,6 @@ class Graph {
             grabbable: false
         });
     }
+
+    //endregion
 }

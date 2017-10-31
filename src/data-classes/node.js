@@ -1,11 +1,6 @@
-export class Node {
-    _id: number;
-    x: number;
-    y: number;
-    private _label: string = '';
-    color: string = 'red';
+class Node {
 
-    constructor(id: number, x: number, y: number) {
+    constructor(id, x, y) {
         this._id = id;
         this.x = x;
         this.y = y;
@@ -19,7 +14,7 @@ export class Node {
         return this._label;
     }
 
-    set label(value: string) {
+    set label(value) {
         this._label = value || `Node ${this.id}`;
     }
 
