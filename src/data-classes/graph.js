@@ -46,7 +46,7 @@ class Graph {
 
         this.cy.on('tap', 'node', this._nodeClick.bind(this));
         this.cy.on('tap', 'edge', this._edgeClick.bind(this));
-        this.cy.on('cxttap', this._backgroundClick.bind(this));
+        this.cy.on('cxttap', this._rightClick.bind(this));
 
         if (style) {
             this.nodeColor = style.nodeColor;
@@ -324,7 +324,7 @@ class Graph {
         }
     }
 
-    _backgroundClick(e) {
+    _rightClick(e) {
         let target = e.target;
         let position = e.position;
 
