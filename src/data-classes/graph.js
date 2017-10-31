@@ -42,6 +42,10 @@ class Graph {
             }]
         });
 
+        this.cy.on('tap', 'node', this._nodeClick.bind(this));
+        this.cy.on('tap', 'edge', this._edgeClick.bind(this));
+        this.cy.on('cxttap', this._backgroundClick.bind(this));
+
         if (style) {
             this.nodeColor = style.nodeColor;
         }
@@ -73,6 +77,7 @@ class Graph {
 
     //endregion
 
+    //region Graph data
     get nodes() {
         return this.cy.json().elements.nodes;
     }
@@ -80,6 +85,16 @@ class Graph {
     get edges() {
         return this.cy.json().elements.edges;
     }
+
+    get selectedNodes() {
+        return this.cy.$('node.selected');
+    }
+
+    get selectedEdges() {
+        return this.cy.$('edge.selected');
+    }
+
+    //endregion    
 
     //region Node gestion
     get lastNodeId() {
@@ -172,7 +187,7 @@ class Graph {
             group: "nodes",
             data: node.data,
             position: node.position,
-            grabbable: false
+            grabbable: true
         });
 
         return node;
@@ -200,5 +215,19 @@ class Graph {
 
         return edge
     }
+    //endregion
+
+    //region Event handling
+
+    _nodeClick(e) {
+    }
+
+    _edgeClick(e) {
+    }
+
+    _backgroundClick() {
+
+    }
+
     //endregion
 }
