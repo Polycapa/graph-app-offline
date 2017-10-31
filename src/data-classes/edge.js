@@ -1,8 +1,9 @@
 class Edge {
-    constructor(id, source, target) {
+    constructor(id, source, target, oriented) {
         this._id = id;
         this.source = source;
         this.target = target;
+        this.oriented = oriented === undefined ? false : true;
     }
 
     get fullId() {
@@ -21,12 +22,21 @@ class Edge {
         this._color = value;
     }
 
+    get arrow() {
+        return this._arrowColor || this.color;
+    }
+
+    set arrow(value) {
+        this._arrowColor = value;
+    }
+
     get data() {
         return {
             id: `e${this.id}`,
             source: this.source.fullId,
             target: this.target.fullId,
-            color: this.color
+            color: this.color,
+            arrowColor: this.arrow
         };
     }
 }

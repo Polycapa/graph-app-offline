@@ -22,8 +22,10 @@ class Graph {
                 style: {
                     'width': 3,
                     'line-color': 'data(color)',
-                    'target-arrow-shape': 'triangle',
-                    'target-arrow-color': 'data(color)',
+                    'mid-target-arrow-shape': 'none',
+                    'mid-target-arrow-color': 'data(arrowColor)',
+                    'mid-target-arrow-fill': 'fill',
+                    'arrow-scale': 2,
                     'label': 'data(label)',
                     'color': 'black'
                 }
@@ -48,6 +50,8 @@ class Graph {
 
         if (style) {
             this.nodeColor = style.nodeColor;
+            this.edgeColor = style.edgeColor;
+            this.edgeArrowColor = style.edgeArrowColor;
         }
     }
 
@@ -72,7 +76,21 @@ class Graph {
     }
 
     set edgeColor(value) {
+        if (!value) {
+            return;
+        }
         this._edgeColor = value;
+    }
+
+    get edgeArrowColor() {
+        return this._edgeArrowColor || this.edgeColor;
+    }
+
+    set edgeArrowColor(value) {
+        if (!value) {
+            return;
+        }
+        this._edgeArrowColor = value;
     }
 
     //endregion
@@ -198,19 +216,26 @@ class Graph {
      * 
      * @param {Node} source The source node
      * @param {Node} target The target node
-     * @param {string} color 
+     * @param {string} color The color of the edge
+     * @param {boolean} oriented True if edge is oriented
+     * @param {string} arrowColor The color of the edge arrow
      * @returns Edge created
      * @memberof Graph
      */
-    addEdge(source, target, color) {
+    addEdge(source, target, color, oriented, arrowColor) {
         color = color || this.edgeColor;
+        arrowColor = arrowColor || this.edgeColor;
 
-        var edge = new Edge(this.nextEdgeId, source, target);
+        var edge = new Edge(this.nextEdgeId, source, target, oriented);
         edge.color = color;
+        edge.arrow = arrowColor;
 
         this.cy.add({
             group: 'edges',
             data: edge.data,
+            style: {
+                'mid-target-arrow-shape': edge.oriented ? 'triangle' : 'none'
+            }
         });
 
         return edge
@@ -241,8 +266,13 @@ class Graph {
         }
     }
 
-    _backgroundClick() {
+    _backgroundClick(e) {
+        let target = e.target;
+        let position = e.position;
 
+        if (target === this.cy) {
+            console.log('Background clicked', position);
+        }
     }
 
     //endregion
