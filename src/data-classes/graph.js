@@ -28,10 +28,16 @@ class Graph {
                     'color': 'black'
                 }
             }, {
-                selector: '.selected',
+                selector: 'node.selected',
                 style: {
                     'border-width': '5px',
                     'border-color': 'black'
+                }
+            }, {
+                selector: 'edge.selected',
+                style: {
+                    'width': 10,
+                    'line-style': 'dashed'
                 }
             }]
         });

@@ -65,6 +65,12 @@
                 super.ready();
                 let graph = new Graph(cytoscape, this.$.graph);
 
+                let node1 = graph.addNode(100, 100);
+                let node2 = graph.addNode(300, 100, '', 'blue');
+                let node3 = graph.addNode(100, 300, '', 'green');
+                graph.addEdge(node1, node2);
+                graph.addEdge(node1, node3);
+                // console.log(graph.nextId);
             }
 
         }

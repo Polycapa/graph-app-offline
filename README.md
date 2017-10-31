@@ -18,3 +18,4 @@ TODO
 - LocalStorage
 - PNG export
 - File export
+- Read only URL (export a graph into an url)
