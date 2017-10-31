@@ -258,6 +258,16 @@ class Graph {
             return;
         }
         node.toggleClass('selected');
+
+        if (this.selectedNodes.length === 2) {
+            let sourceData = this.getNodeData(this.selectedNodes[0]);
+            let targetData = this.getNodeData(this.selectedNodes[1]);
+
+            let source = new Node(sourceData.id, sourceData.x, sourceData.y);
+            let target = new Node(targetData.id, targetData.x, targetData.y);
+            this.addEdge(source, target);
+            this.unselectAllNodes();
+        }
     }
 
     _edgeClick(e) {
