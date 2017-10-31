@@ -1,13 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../graph-viewer/graph-viewer.html">
 
 <dom-module id="graph-app">
   <template>
     <style>
-      :host {
+       :host {
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <graph-viewer></graph-viewer>
   </template>
 
   <script>
@@ -16,7 +17,9 @@
      * @polymer
      */
     class GraphApp extends Polymer.Element {
-      static get is() { return 'graph-app'; }
+      static get is() {
+        return 'graph-app';
+      }
       static get properties() {
         return {
           prop1: {
