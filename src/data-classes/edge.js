@@ -1,5 +1,8 @@
 class Edge {
     constructor(id, source, target, oriented) {
+        if (id.indexOf && id.indexOf('e') !== -1) {
+            id = id.substring(1);
+        }
         this._id = id;
         this.source = source;
         this.target = target;

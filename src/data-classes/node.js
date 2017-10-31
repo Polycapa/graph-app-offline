@@ -1,6 +1,10 @@
 class Node {
 
     constructor(id, x, y) {
+        if (id.indexOf && id.indexOf('n') !== -1) {
+            id = id.substring(1);
+        }
+
         this._id = id;
         this.x = x;
         this.y = y;
