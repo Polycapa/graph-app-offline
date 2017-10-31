@@ -226,6 +226,17 @@ class Graph {
     }
 
     _edgeClick(e) {
+        let clickedEdge = e.target;
+        let alreadySelected = false;
+        this.selectedEdges.forEach(edge => {
+            if (edge === clickedEdge) {
+                alreadySelected = true;
+            }
+            edge.removeClass('selected');
+        });
+        if (!alreadySelected) {
+            clickedEdge.addClass('selected');
+        }
     }
 
     _backgroundClick() {
