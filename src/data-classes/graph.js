@@ -24,7 +24,7 @@ class Graph {
                     'line-color': 'data(color)',
                     'mid-target-arrow-shape': 'none',
                     'mid-target-arrow-color': 'data(arrowColor)',
-                    'mid-target-arrow-fill': 'fill',
+                    'mid-target-arrow-fill': 'filled',
                     'arrow-scale': 2,
                     'label': 'data(label)',
                     'color': 'black'
