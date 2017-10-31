@@ -12,11 +12,10 @@
       #graph {
         width: 100vw;
         height: 100vh;
-        background: red;
       }
     </style>
 
-    <addnode-dialog id="nodeDialog"></addnode-dialog>
+    <addnode-dialog id="nodeDialog" on-add-node="_addNode"></addnode-dialog>
 
     <div id="graph">
 
@@ -46,6 +45,11 @@
         super.ready();
         this.graph = new Graph(cytoscape, this.$.graph);
         this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
+      }
+
+      _addNode(e) {
+        let data = e.detail;
+        this.graph.addNode(data.x, data.y, data.label, data.color);
       }
     }
 
