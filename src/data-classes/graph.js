@@ -221,8 +221,10 @@ class Graph {
 
     _nodeClick(e) {
         let node = e.target;
+        if (this.selectedNodes.length >= 2 && !node.hasClass('selected')) {
+            return;
+        }
         node.toggleClass('selected');
-        console.log(this.selectedNodes);
     }
 
     _edgeClick(e) {
