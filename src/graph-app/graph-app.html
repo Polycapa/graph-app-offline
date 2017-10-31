@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../graph-viewer/graph-viewer.html">
 
 <dom-module id="graph-app">
   <template>
@@ -7,10 +6,22 @@
        :host {
         display: block;
       }
-    </style>
-    <graph-viewer></graph-viewer>
-  </template>
 
+      #graph {
+        width: 100vw;
+        height: 100vh;
+        background: red;
+      }
+    </style>
+    <div id="graph">
+
+    </div>
+  </template>
+  <script src="../../bower_components/cytoscape/dist/cytoscape.min.js"></script>
+
+  <script src="../data-classes/node.js"></script>
+  <script src="../data-classes/edge.js"></script>
+  <script src="../data-classes/graph.js"></script>
   <script>
     /**
      * @customElement
@@ -21,12 +32,12 @@
         return 'graph-app';
       }
       static get properties() {
-        return {
-          prop1: {
-            type: String,
-            value: 'graph-app'
-          }
-        };
+        return {};
+      }
+
+      ready() {
+        super.ready();
+        let graph = new Graph(cytoscape, this.$.graph);
       }
     }
 
