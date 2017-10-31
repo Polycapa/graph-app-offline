@@ -6,10 +6,12 @@ TODO
 - [ ] Add node
     - [x] Color
     - [x] Label
+    - [ ] On click
 - [ ] Add edge
     - [x] Color
     - [ ] Label
-    - [ ] Type (arrow or not)
+    - [x] Type (arrow or not)
+    - [ ] On click
 - Move node
 - Delete node
 - Delete edge
