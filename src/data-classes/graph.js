@@ -279,7 +279,7 @@ class Graph {
         let position = e.position;
 
         if (target === this.cy) {
-            console.log('Background clicked', position);
+            this.addNode(position.x, position.y);
         }
     }
 
