@@ -305,7 +305,7 @@ class Graph {
 
             let source = new Node(sourceData.id, sourceData.x, sourceData.y);
             let target = new Node(targetData.id, targetData.x, targetData.y);
-            this.beforeEdgeCreation();
+            this.beforeEdgeCreation(source, target);
         }
     }
 
