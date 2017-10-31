@@ -280,6 +280,15 @@ class Graph {
     }
     //endregion
 
+    //region Graph deletion
+
+    remove(id) {
+        let item = this.cy.$(`#${id}`);
+        this.cy.remove(item);
+    }
+
+    //endregion
+
     //region Event handling
 
     _nodeClick(e) {
@@ -312,13 +321,14 @@ class Graph {
 
     _edgeClick(e) {
         let clickedEdge = e.target;
-        let alreadySelected = false;
+        let alreadySelected = clickedEdge.hasClass('selected');
+
+        // Unselect all edges
         this.selectedEdges.forEach(edge => {
-            if (edge === clickedEdge) {
-                alreadySelected = true;
-            }
             edge.removeClass('selected');
         });
+
+
         if (!alreadySelected) {
             clickedEdge.addClass('selected');
         }
@@ -329,6 +339,7 @@ class Graph {
         let position = e.position;
 
         if (target === this.cy) {
+            // Right click on background, insert node
             this.beforeNodeCreation().then(node => {
                 if (node) {
                     try {
@@ -340,6 +351,12 @@ class Graph {
                     this.addNode(position.x, position.y)
                 }
             })
+        } else if (target.isNode()) {
+            // Remove node
+            this.remove(this.getNodeData(target).id);
+        } else if (target.isEdge()) {
+            // Remove edge
+            this.remove(this.getEdgeData(target).id);
         }
     }
 
