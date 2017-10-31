@@ -2,17 +2,19 @@
 
 TODO
 
-- [ ] Display a graph
+- [x] Display a graph
 - [ ] Add node
     - [x] Color
     - [x] Label
-    - [ ] On click
+    - [x] On click
+        - [ ] Creation window
 - [ ] Add edge
     - [x] Color
     - [ ] Label
     - [x] Type (arrow or not)
-    - [ ] On click
-- Move node
+    - [x] On click
+        - [ ] Creation window
+- [x] Move node
 - Delete node
 - Delete edge
 - Legend
