@@ -3,7 +3,11 @@
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "cytoscape": "^3.2.5"
+    "cytoscape": "^3.2.5",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1",
+    "paper-styles": "PolymerElements/paper-styles#^2.0.0",
+    "paper-input": "PolymerElements/paper-input#^2.0.2",
+    "paper-swatch-picker": "PolymerElements/paper-swatch-picker#^2.0.1"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
