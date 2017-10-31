@@ -1,0 +1,6 @@
+{
+  "name": "graph-app-offline",
+  "short_name": "graph-app-offline",
+  "start_url": "/",
+  "display": "standalone"
+}
