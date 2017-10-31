@@ -112,6 +112,36 @@ class Graph {
         return this.cy.$('edge.selected');
     }
 
+    get beforeNodeCreation() {
+        return this._beforeNodeCreation || (_ => new Promise((resolve, reject) => {
+            resolve();
+        }));
+    }
+
+    set beforeNodeCreation(value) {
+        if (!value || !value.then) {
+            return;
+        }
+
+        this._beforeNodeCreation = value;
+    }
+
+    get beforeEdgeCreation() {
+        return this._beforeEdgeCreation || (_ => new Promise((resolve, reject) => {
+            resolve();
+        }));
+    }
+
+    set beforeEdgeCreation(value) {
+        if (!value || !value.then) {
+            return;
+        }
+
+        this._beforeEdgeCreation = value;
+    }
+
+
+
     //endregion    
 
     //region Node gestion
@@ -265,7 +295,13 @@ class Graph {
 
             let source = new Node(sourceData.id, sourceData.x, sourceData.y);
             let target = new Node(targetData.id, targetData.x, targetData.y);
-            this.addEdge(source, target);
+            this.beforeEdgeCreation().then(edge => {
+                if (edge) {
+                    this.addEdge(edge.source, edge.target, edge.color, edge.oriented, edge.arrowColor)
+                } else {
+                    this.addEdge(source, target);
+                }
+            })
             this.unselectAllNodes();
         }
     }
@@ -289,7 +325,13 @@ class Graph {
         let position = e.position;
 
         if (target === this.cy) {
-            this.addNode(position.x, position.y);
+            this.beforeNodeCreation().then(node => {
+                if (node) {
+                    this.addNode(node.x, node.y, node.label, node.color);
+                } else {
+                    this.addNode(position.x, position.y)
+                }
+            })
         }
     }
 
