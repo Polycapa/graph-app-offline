@@ -56,6 +56,15 @@ class Graph {
     get nodeLabelColor() {
         return 'black';
     }
+
+    get edgeColor() {
+        return this._edgeColor || 'blue';
+    }
+
+    set edgeColor(value) {
+        this._edgeColor = value;
+    }
+
     //endregion
 
     get nodes() {
@@ -98,6 +107,37 @@ class Graph {
 
     //endregion
 
+    //region Edge gestion
+    get lastEdgeId() {
+        var edges = this.edges;
+
+        if (!edges) {
+            return;
+        }
+
+
+        let lastId = -1;
+        for (let edge of edges) {
+            let id = this.getEdgeData(edge).id;
+            id = Number(id.substring(1));
+            if (id > lastId) {
+                lastId = id;
+            }
+        }
+
+        return lastId;
+    }
+
+    get nextEdgeId() {
+        return this.lastEdgeId !== undefined ? this.lastEdgeId + 1 : 0;
+    }
+
+
+    getEdgeData(edge) {
+        return edge.data;
+    }
+    //endregion
+
     //region Graph insertion
 
     /**
@@ -128,7 +168,31 @@ class Graph {
             position: node.position,
             grabbable: false
         });
+
+        return node;
     }
 
+    /**
+     * Insert an edge in the graph
+     * 
+     * @param {Node} source The source node
+     * @param {Node} target The target node
+     * @param {string} color 
+     * @returns Edge created
+     * @memberof Graph
+     */
+    addEdge(source, target, color) {
+        color = color || this.edgeColor;
+
+        var edge = new Edge(this.nextEdgeId, source, target);
+        edge.color = color;
+
+        this.cy.add({
+            group: 'edges',
+            data: edge.data,
+        });
+
+        return edge
+    }
     //endregion
 }
