@@ -297,7 +297,11 @@ class Graph {
             let target = new Node(targetData.id, targetData.x, targetData.y);
             this.beforeEdgeCreation().then(edge => {
                 if (edge) {
-                    this.addEdge(edge.source, edge.target, edge.color, edge.oriented, edge.arrowColor)
+                    try {
+                        this.addEdge(edge.source, edge.target, edge.color, edge.oriented, edge.arrowColor)
+                    } catch (e) {
+                        throw new Error(e);
+                    }
                 } else {
                     this.addEdge(source, target);
                 }
@@ -327,7 +331,11 @@ class Graph {
         if (target === this.cy) {
             this.beforeNodeCreation().then(node => {
                 if (node) {
-                    this.addNode(node.x, node.y, node.label, node.color);
+                    try {
+                        this.addNode(node.x, node.y, node.label, node.color);
+                    } catch (e) {
+                        throw new Error(e);
+                    }
                 } else {
                     this.addNode(position.x, position.y)
                 }
