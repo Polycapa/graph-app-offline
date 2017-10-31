@@ -220,6 +220,9 @@ class Graph {
     //region Event handling
 
     _nodeClick(e) {
+        let node = e.target;
+        node.toggleClass('selected');
+        console.log(this.selectedNodes);
     }
 
     _edgeClick(e) {
