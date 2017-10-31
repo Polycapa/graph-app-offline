@@ -47,11 +47,11 @@
             <div class="vertical layout">
                 <div class="horizontal center layout">
                     <label for="label">Label</label>
-                    <input type="text" name="label" id="labelInput" class="flex">
+                    <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
                 </div>
                 <div class="horizontal center layout">
                     <label for="color">Color</label>
-                    <input type="color" name="color" id="colorInput" value$="{{data.color::input}}" placeholder="Color" class="flex">
+                    <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
                 </div>
 
                 <div class="horizontal center center-justified layout">
