@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="addnode-dialog">
     <template>
@@ -14,7 +15,7 @@
             #form {
                 background: white;
                 width: 300px;
-                min-height: 200px;
+                min-height: 100px;
                 border-radius: 3px;
                 padding: 5px;
 
@@ -25,12 +26,38 @@
 
                 @apply(--shadow-elevation-8dp);
             }
+
+            input {
+                border: #eaeaea 1px solid;
+                border-radius: 3px;
+                margin: 5px;
+            }
+
+            input[type="color"] {
+                height: 15px;
+            }
+
+            paper-button {
+                color: white;
+                background: var(--paper-blue-500);
+            }
         </style>
 
         <div id="form" hidden>
             <div class="vertical layout">
-                <paper-input label="Label"></paper-input>
-                <!-- <paper-swatch-picker color="{{data.color::input}}"></paper-swatch-picker> -->
+                <div class="horizontal center layout">
+                    <label for="label">Label</label>
+                    <input type="text" name="label" id="labelInput" class="flex">
+                </div>
+                <div class="horizontal center layout">
+                    <label for="color">Color</label>
+                    <input type="color" name="color" id="colorInput" value$="{{data.color::input}}" placeholder="Color" class="flex">
+                </div>
+
+                <div class="horizontal center center-justified layout">
+                    <paper-button on-click="save">Save</paper-button>
+                </div>
+
             </div>
         </div>
 
@@ -63,7 +90,9 @@
                         value: () => {
                             return {
                                 label: '',
-                                color: '#ff0000'
+                                color: '',
+                                x: 0,
+                                y: 0
                             }
                         }
                     }
@@ -75,17 +104,42 @@
                     this.updateStyles({
                         '--top-pos': top + 'px'
                     });
+                    this.data.y = top;
                 }
 
                 if (left) {
                     this.updateStyles({
                         '--left-pos': left + 'px'
                     });
+                    this.data.x = left;
                 }
-
-                console.log(top, left);
-                console.log('Open node dialog');
                 this.$.form.hidden = false;
+            }
+
+            close() {
+                this.reset();
+                this.$.form.hidden = true;
+            }
+
+            save() {
+                this.data.label = this.$.labelInput.value;
+                this.data.color = this.$.colorInput.value;
+
+                let event = new CustomEvent('add-node', {
+                    detail: this.data
+                })
+                this.dispatchEvent(event);
+
+                this.close();
+            }
+
+            reset() {
+                this.data = {
+                    label: '',
+                    color: '',
+                    x: 0,
+                    y: 0
+                };
             }
         }
 
