@@ -4,16 +4,17 @@ TODO
 
 - [ ] Display a graph
 - [ ] Add node
-    - [ ] Color
-    - [ ] Label
+    - [x] Color
+    - [x] Label
 - [ ] Add edge
-    - [ ] Color
+    - [x] Color
     - [ ] Label
     - [ ] Type (arrow or not)
 - Move node
 - Delete node
 - Delete edge
 - Legend
+- Drag and drop window
 - LocalStorage
 - PNG export
 - File export
