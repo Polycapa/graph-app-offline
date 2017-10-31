@@ -46,10 +46,6 @@ class Graph {
         return this._nodeColor || 'yellow';
     }
 
-    get nodeLabelColor() {
-        return 'black';
-    }
-
     set nodeColor(value) {
         if (!value) {
             return;
@@ -57,6 +53,9 @@ class Graph {
         this._nodeColor = value;
     }
 
+    get nodeLabelColor() {
+        return 'black';
+    }
     //endregion
 
     get nodes() {
@@ -100,6 +99,17 @@ class Graph {
     //endregion
 
     //region Graph insertion
+
+    /**
+     * Insert a node in the graph
+     * 
+     * @param {number} x X coordinate 
+     * @param {number} y Y coordinate
+     * @param {string} label Label of the node
+     * @param {string} color Color of the node
+     * @returns Node created
+     * @memberof Graph
+     */
     addNode(x, y, label, color) {
         // Set node data
         label = label || '';

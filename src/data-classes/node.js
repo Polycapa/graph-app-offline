@@ -6,6 +6,10 @@ class Node {
         this.y = y;
     }
 
+    get fullId() {
+        return `n${this.id}`;
+    }
+
     get id() {
         return this._id;
     }
@@ -18,9 +22,17 @@ class Node {
         this._label = value || `Node ${this.id}`;
     }
 
+    get color() {
+        return this._color || 'blue';
+    }
+
+    set color(value) {
+        this._color = value;
+    }
+
     get data() {
         return {
-            id: `n${this.id}`,
+            id: this.fullId,
             x: this.x,
             y: this.y,
             label: this.label,
