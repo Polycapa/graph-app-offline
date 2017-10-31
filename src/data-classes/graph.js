@@ -141,7 +141,11 @@ class Graph {
 
 
     getNodeData(node) {
-        return node.data;
+        return typeof node.data === "function" ? node.data() : node.data;
+    }
+
+    unselectAllNodes() {
+        this.selectedNodes.forEach(node => node.removeClass('selected'));
     }
 
     //endregion
@@ -173,7 +177,11 @@ class Graph {
 
 
     getEdgeData(edge) {
-        return edge.data;
+        return typeof edge.data === "function" ? edge.data() : edge.data;
+    }
+
+    unselectAllEdges() {
+        this.selectedEdges.forEach(edge => edge.removeClass('selected'));
     }
     //endregion
 
