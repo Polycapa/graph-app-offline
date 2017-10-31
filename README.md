@@ -9,6 +9,7 @@ TODO
 - [ ] Add edge
     - [ ] Color
     - [ ] Label
+    - [ ] Type (arrow or not)
 - Move node
 - Delete node
 - Delete edge
