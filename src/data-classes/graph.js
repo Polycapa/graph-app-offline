@@ -113,13 +113,11 @@ class Graph {
     }
 
     get beforeNodeCreation() {
-        return this._beforeNodeCreation || (_ => new Promise((resolve, reject) => {
-            resolve();
-        }));
+        return this._beforeNodeCreation || (_ => {});
     }
 
     set beforeNodeCreation(value) {
-        if (!value || !value.then) {
+        if (typeof value !== "function") {
             return;
         }
 
@@ -127,13 +125,11 @@ class Graph {
     }
 
     get beforeEdgeCreation() {
-        return this._beforeEdgeCreation || (_ => new Promise((resolve, reject) => {
-            resolve();
-        }));
+        return this._beforeEdgeCreation || (_ => {});
     }
 
     set beforeEdgeCreation(value) {
-        if (!value || !value.then) {
+        if (typeof value !== "function") {
             return;
         }
 
@@ -246,6 +242,9 @@ class Graph {
             grabbable: true
         });
 
+
+        this.unselectAllNodes();
+
         return node;
     }
 
@@ -276,7 +275,9 @@ class Graph {
             }
         });
 
-        return edge
+        this.unselectAllEdges();
+
+        return edge;
     }
     //endregion
 
@@ -304,18 +305,7 @@ class Graph {
 
             let source = new Node(sourceData.id, sourceData.x, sourceData.y);
             let target = new Node(targetData.id, targetData.x, targetData.y);
-            this.beforeEdgeCreation().then(edge => {
-                if (edge) {
-                    try {
-                        this.addEdge(edge.source, edge.target, edge.color, edge.oriented, edge.arrowColor)
-                    } catch (e) {
-                        throw new Error(e);
-                    }
-                } else {
-                    this.addEdge(source, target);
-                }
-            })
-            this.unselectAllNodes();
+            this.beforeEdgeCreation();
         }
     }
 
@@ -340,17 +330,7 @@ class Graph {
 
         if (target === this.cy) {
             // Right click on background, insert node
-            this.beforeNodeCreation().then(node => {
-                if (node) {
-                    try {
-                        this.addNode(node.x, node.y, node.label, node.color);
-                    } catch (e) {
-                        throw new Error(e);
-                    }
-                } else {
-                    this.addNode(position.x, position.y)
-                }
-            })
+            this.beforeNodeCreation();
         } else if (target.isNode()) {
             // Remove node
             this.remove(this.getNodeData(target).id);
