@@ -26,12 +26,11 @@
 
             #legend {
                 width: 300px;
-                min-height: 100px;
                 border: 1px solid var(--paper-grey-300);
                 border-radius: 5px;
                 padding: 5px;
-                @apply(--shadow-elevation-2dp);
                 cursor: move;
+                @apply(--shadow-elevation-2dp);
             }
 
             .legend {
@@ -61,6 +60,14 @@
             .inputs {
                 padding: 5px;
             }
+
+            .legend .deleteIcon {
+                visibility: hidden;
+            }
+
+            .legend:hover .deleteIcon {
+                visibility: visible;
+            }
         </style>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
@@ -81,8 +88,9 @@
                 </iron-collapse>
                 <iron-collapse id="legends" opened>
                     <template is="dom-repeat" items="{{legends}}">
-                        <div class="legend" style$="background-color:{{item.color}}">
-                            {{item.label}}
+                        <div class="legend horizontal center end-justified layout" style$="background-color:{{item.color}}">
+                            <div class="flex">{{item.label}}</div>
+                            <paper-icon-button icon="delete" on-click="deleteLegend" class="deleteIcon"></paper-icon-button>
                         </div>
                     </template>
                 </iron-collapse>
@@ -179,10 +187,15 @@
                     this.$.colorInput.value = '';
                 } else {
                     this.push('legends', {
-                        label: this.$.labelInput.value = '',
+                        label: this.$.labelInput.value,
                         color: this.$.colorInput.value
                     })
                 }
+            }
+
+            deleteLegend(e) {
+                let index = e.model.index;
+                this.splice('legends', index, 1);
             }
 
         }
