@@ -276,6 +276,7 @@ class Graph {
         });
 
         this.unselectAllEdges();
+        this.unselectAllNodes();
 
         return edge;
     }
@@ -300,11 +301,24 @@ class Graph {
         node.toggleClass('selected');
 
         if (this.selectedNodes.length === 2) {
-            let sourceData = this.getNodeData(this.selectedNodes[0]);
-            let targetData = this.getNodeData(this.selectedNodes[1]);
+            let firstData = this.getNodeData(this.selectedNodes[0]);
+            let secondData = this.getNodeData(this.selectedNodes[1]);
+            let nodeData = this.getNodeData(node);
+
+            let sourceData, targetData;
+            if (firstData.id === nodeData.id) {
+                // Node is first data
+                targetData = firstData;
+                sourceData = secondData;
+            } else {
+                // Node is second data
+                targetData = secondData;
+                sourceData = firstData;
+            }
 
             let source = new Node(sourceData.id, sourceData.x, sourceData.y);
             let target = new Node(targetData.id, targetData.x, targetData.y);
+
             this.beforeEdgeCreation(source, target);
         }
     }
