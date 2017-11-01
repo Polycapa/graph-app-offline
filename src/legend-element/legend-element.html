@@ -125,9 +125,9 @@
                         type: Boolean,
                         value: false
                     },
-                    saveLegend: {
-                        type: Boolean,
-                        value: false
+                    storageKey: {
+                        type: String,
+                        value: ''
                     },
                     top: {
                         type: Number,
@@ -170,7 +170,7 @@
                     }
                 }
 
-                if (this.saveLegend) {
+                if (this.storageKey) {
                     this.loadFromStorage();
                 }
             }
@@ -209,18 +209,20 @@
             }
 
             saveToStorage() {
-                if (this.saveLegend) {
-                    localStorage.setItem('graph-legend', JSON.stringify(this.legends));
+                if (this.storageKey) {
+                    localStorage.setItem(this.storageKey, JSON.stringify(this.legends));
                 }
             }
 
             loadFromStorage() {
-                let data = localStorage.getItem('graph-legend');
-                if (data) {
-                    try {
-                        this.legends = JSON.parse(data);
-                    } catch (e) {
-                        console.error(e);
+                if (this.storageKey) {
+                    let data = localStorage.getItem(this.storageKey);
+                    if (data) {
+                        try {
+                            this.legends = JSON.parse(data);
+                        } catch (e) {
+                            console.error(e);
+                        }
                     }
                 }
             }
