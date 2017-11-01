@@ -28,9 +28,9 @@
   </template>
   <script src="../../bower_components/cytoscape/dist/cytoscape.min.js"></script>
 
-  <script src="../data-classes/node.js"></script>
-  <script src="../data-classes/edge.js"></script>
-  <script src="../data-classes/graph.js"></script>
+  <script src="../data-classes/graphcreator-node.js"></script>
+  <script src="../data-classes/graphcreator-edge.js"></script>
+  <script src="../data-classes/graphcreator-graph.js"></script>
   <script>
     /**
      * @customElement
@@ -42,13 +42,15 @@
       }
       static get properties() {
         return {
-          graph: Object
+          graph: {
+            type: Object
+          }
         };
       }
 
       ready() {
         super.ready();
-        this.graph = new Graph(cytoscape, this.$.graph);
+        this.graph = new GraphCreatorGraph(cytoscape, this.$.graph);
         // Fix from Chrome : if not done, elements added after disappear
         this.$.graph.style.backgroundColor = 'white';
 

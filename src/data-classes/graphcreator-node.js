@@ -1,4 +1,4 @@
-class Node {
+class GraphCreatorNode {
 
     constructor(id, x, y) {
         if (id.indexOf && id.indexOf('n') !== -1) {

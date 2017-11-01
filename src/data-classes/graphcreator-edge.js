@@ -1,4 +1,4 @@
-class Edge {
+class GraphCreatorEdge {
     constructor(id, source, target, oriented) {
         if (id.indexOf && id.indexOf('e') !== -1) {
             id = id.substring(1);

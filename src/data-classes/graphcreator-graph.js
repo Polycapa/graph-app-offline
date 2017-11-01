@@ -1,4 +1,4 @@
-class Graph {
+class GraphCreatorGraph {
 
     // Init graph with cytoscape library
     constructor(cytoscape, container, style) {
@@ -215,7 +215,7 @@ class Graph {
 
     cyToNode(cyNode) {
         let data = this.getNodeData(cyNode);
-        let node = new Node(data.id, data.x, data.y);
+        let node = new GraphCreatorNode(data.id, data.x, data.y);
         node.label = data.label;
         node.color = data.color;
         return node;
@@ -279,7 +279,7 @@ class Graph {
 
     cyToEdge(cyEdge) {
         let data = this.getEdgeData(cyEdge);
-        let edge = new Edge(data.id, this.getNode(data.source), this.getNode(data.target), data.oriented);
+        let edge = new GraphCreatorEdge(data.id, this.getNode(data.source), this.getNode(data.target), data.oriented);
         edge.arrowColor = data.arrowColor;
         edge.color = data.color;
         edge.label = data.label;
@@ -306,7 +306,7 @@ class Graph {
 
         var nextId = this.nextNodeId;
 
-        let node = new Node(nextId, x, y);
+        let node = new GraphCreatorNode(nextId, x, y);
         node.label = label;
         node.color = color || this.nodeColor;
 
@@ -326,8 +326,8 @@ class Graph {
     /**
      * Insert an edge in the graph
      * 
-     * @param {Node} source The source node
-     * @param {Node} target The target node
+     * @param {GraphCreatorNode} source The source node
+     * @param {GraphCreatorNode} target The target node
      * @param {string} color The color of the edge
      * @param {boolean} oriented True if edge is oriented
      * @param {string} arrowColor The color of the edge arrow
@@ -339,7 +339,7 @@ class Graph {
         color = color || this.edgeColor;
         arrowColor = arrowColor || this.edgeColor;
 
-        var edge = new Edge(this.nextEdgeId, source, target, oriented);
+        var edge = new GraphCreatorEdge(this.nextEdgeId, source, target, oriented);
         edge.color = color;
         edge.arrow = arrowColor;
         edge.label = label;
@@ -398,8 +398,8 @@ class Graph {
                 sourceData = firstData;
             }
 
-            let source = new Node(sourceData.id, sourceData.x, sourceData.y);
-            let target = new Node(targetData.id, targetData.x, targetData.y);
+            let source = new GraphCreatorNode(sourceData.id, sourceData.x, sourceData.y);
+            let target = new GraphCreatorNode(targetData.id, targetData.x, targetData.y);
 
             this.beforeEdgeCreation(source, target, mousePosition);
         }
