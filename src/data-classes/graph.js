@@ -124,6 +124,18 @@ class Graph {
         this._beforeNodeCreation = value;
     }
 
+    get onNodeSelection() {
+        return this._onNodeSelection || (_ => {});
+    }
+
+    set onNodeSelection(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._onNodeSelection = value;
+    }
+
     get beforeEdgeCreation() {
         return this._beforeEdgeCreation || (_ => {});
     }
@@ -170,8 +182,20 @@ class Graph {
         return typeof node.data === "function" ? node.data() : node.data;
     }
 
+    updateNodeData(node, property, value) {
+        this.cy.$(`#${this.getNodeData(node).id}`).data(property, value);
+    }
+
     unselectAllNodes() {
         this.selectedNodes.forEach(node => node.removeClass('selected'));
+    }
+
+    cyToNode(cyNode) {
+        let data = this.getNodeData(cyNode);
+        let node = new Node(data.id, data.x, data.y);
+        node.label = data.label;
+        node.color = data.color;
+        return node;
     }
 
     //endregion
@@ -204,6 +228,10 @@ class Graph {
 
     getEdgeData(edge) {
         return typeof edge.data === "function" ? edge.data() : edge.data;
+    }
+
+    updateEdgeData(edge, property, value) {
+        this.cy.$(`#${this.getEdgeData(edge).id}`).data(property, value);
     }
 
     unselectAllEdges() {
@@ -299,6 +327,11 @@ class Graph {
             return;
         }
         node.toggleClass('selected');
+
+        if (node.hasClass('selected')) {
+            console.log(this.cyToNode(node));
+            this.onNodeSelection(this.cyToNode(node));
+        }
 
         if (this.selectedNodes.length === 2) {
             let firstData = this.getNodeData(this.selectedNodes[0]);
