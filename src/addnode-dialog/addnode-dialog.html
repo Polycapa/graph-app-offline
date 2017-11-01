@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="addnode-dialog">
@@ -45,6 +45,7 @@
                 border: #eaeaea 1px solid;
                 border-radius: 3px;
                 margin: 5px;
+                font-size: 17px;
             }
 
             input[type="color"] {
@@ -55,15 +56,38 @@
                 color: white;
                 background: var(--paper-blue-500);
             }
+
+            .title {
+                font-size: 20px;
+                padding: 5px;
+                border-bottom: 1px solid var(--paper-grey-200);
+                margin-bottom: 5px;
+            }
+
+            label {
+                font-size: 16px;
+                font-weight: lighter;
+                margin-right: 5px;
+            }
+
+            .input {
+                margin: 3px;
+            }
         </style>
 
         <div id="form" hidden>
             <div class="vertical layout">
-                <div class="horizontal center layout">
+                <div class="horizontal center layout title">
+                    <div class="flex" style="text-align:center">Add node</div>
+
+                    <paper-icon-button icon="close" on-click="close"></paper-icon-button>
+
+                </div>
+                <div class="horizontal center layout input">
                     <label for="label">Label</label>
                     <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
                 </div>
-                <div class="horizontal center layout">
+                <div class="horizontal center layout input">
                     <label for="color">Color</label>
                     <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
                 </div>
@@ -104,7 +128,7 @@
                         value: () => {
                             return {
                                 label: '',
-                                color: '',
+                                color: '#ff0000',
                                 x: 0,
                                 y: 0
                             }
@@ -150,7 +174,7 @@
             reset() {
                 this.data = {
                     label: '',
-                    color: '',
+                    color: '#ff0000',
                     x: 0,
                     y: 0
                 };
