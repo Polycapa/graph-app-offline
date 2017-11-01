@@ -24,9 +24,11 @@ TODO
     - [x] Drag and drop
 - [ ] Legend
     - [x] Display
-    - [ ] Add item to legend 
+    - [x] Add item to legend 
+    - [x] Delete item
 - [ ] LocalStorage
 - [ ] PNG export
 - [ ] File export
 - [ ] Read only URL (export a graph into an url)
 - [ ] Groups
+- [ ] Reduce window
