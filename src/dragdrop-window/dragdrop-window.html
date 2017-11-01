@@ -1,0 +1,120 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+
+<dom-module id="dragdrop-window">
+    <template>
+        <style>
+             :host {
+                display: block;
+                --top-pos: 0;
+                --left-pos: 0;
+            }
+
+            #drag {
+                position: fixed;
+                top: var(--top-pos);
+                left: var(--left-pos);
+                z-index: 2;
+            }
+        </style>
+
+        <div on-track="handleTrack" id="drag" on-mousedown="saveMouseRelativePos" on-mouseup="resetMouseRelativePos">
+            <slot></slot>
+        </div>
+
+    </template>
+
+    <script>
+        /**
+         * `dragdrop-window` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.GestureEventListeners(Polymer.Element)}
+         */
+        class DragDropWindow extends Polymer.GestureEventListeners(Polymer.Element) {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'dragdrop-window';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    top: {
+                        type: Number,
+                        value: 0,
+                        observer: 'updateTopPos'
+                    },
+                    left: {
+                        type: Number,
+                        value: 0,
+                        observer: 'updateLeftPos'
+                    },
+                    mouseRelativePos: {
+                        type: Object,
+                        value: () => {
+                            return {
+                                x: 0,
+                                y: 0
+                            };
+                        }
+                    }
+                };
+            }
+
+            saveMouseRelativePos(e) {
+                this.mouseRelativePos.x = e.pageX - this.$.drag.offsetLeft;
+                this.mouseRelativePos.y = e.pageY - this.$.drag.offsetTop;
+            }
+
+            resetMouseRelativePos(e) {
+                this.mouseRelativePos.x = 0;
+                this.mouseRelativePos.y = 0;
+            }
+
+            handleTrack(e) {
+                switch (e.detail.state) {
+                    case 'start':
+                        break;
+                    case 'track':
+                        this.updatePos(e.detail.y - this.mouseRelativePos.y,
+                            e.detail.x - this.mouseRelativePos.x);
+                        break;
+                    case 'end':
+                        break;
+                }
+                // console.log(this.message);
+                e.preventDefault();
+
+            }
+
+            updatePos(top, left) {
+                this.updateStyles({
+                    '--top-pos': top + 'px',
+                    '--left-pos': left + 'px'
+                });
+            }
+
+            updateTopPos(top) {
+                this.updateStyles({
+                    '--top-pos': top + 'px'
+                });
+            }
+
+            updateLeftPos(left) {
+                this.updateStyles({
+                    '--left-pos': left + 'px'
+                });
+            }
+
+        }
+
+        window.customElements.define(DragDropWindow.is, DragDropWindow);
+    </script>
+</dom-module>
