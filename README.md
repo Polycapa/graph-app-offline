@@ -22,13 +22,16 @@ TODO
 - [x] Drag and drop window
     - [x] Remove window position
     - [x] Drag and drop
-- [ ] Legend
+- [x] Legend
     - [x] Display
     - [x] Add item to legend 
     - [x] Delete item
-- [ ] LocalStorage
+- [x] LocalStorage
+    - [x] Graph
+    - [x] Legend 
 - [ ] PNG export
 - [ ] File export
 - [ ] Read only URL (export a graph into an url)
+- [ ] Multiple graph
 - [ ] Groups
 - [ ] Reduce window
