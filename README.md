@@ -23,6 +23,8 @@ TODO
     - [x] Remove window position
     - [x] Drag and drop
 - [ ] Legend
+    - [x] Display
+    - [ ] Add item to legend 
 - [ ] LocalStorage
 - [ ] PNG export
 - [ ] File export
