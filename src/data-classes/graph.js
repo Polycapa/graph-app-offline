@@ -27,7 +27,9 @@ class Graph {
                     'mid-target-arrow-fill': 'filled',
                     'arrow-scale': 2,
                     'label': 'data(label)',
-                    'color': 'black'
+                    'color': 'black',
+                    'text-rotation': 'autorotate',
+                    'text-margin-y': -10
                 }
             }, {
                 selector: 'node.selected',
@@ -280,6 +282,7 @@ class Graph {
         let edge = new Edge(data.id, this.getNode(data.source), this.getNode(data.target), data.oriented);
         edge.arrowColor = data.arrowColor;
         edge.color = data.color;
+        edge.label = data.label;
         return edge;
     }
     //endregion
@@ -331,13 +334,15 @@ class Graph {
      * @returns Edge created
      * @memberof Graph
      */
-    addEdge(source, target, color, oriented, arrowColor) {
+    addEdge(source, target, color, label, oriented, arrowColor) {
+        label = label || '';
         color = color || this.edgeColor;
         arrowColor = arrowColor || this.edgeColor;
 
         var edge = new Edge(this.nextEdgeId, source, target, oriented);
         edge.color = color;
         edge.arrow = arrowColor;
+        edge.label = label;
 
         this.cy.add({
             group: 'edges',

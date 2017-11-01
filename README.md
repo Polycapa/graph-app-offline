@@ -8,9 +8,9 @@ TODO
     - [x] Label
     - [x] On click
         - [x] Creation window
-- [ ] Add edge
+- [x] Add edge
     - [x] Color
-    - [ ] Label
+    - [x] Label
     - [x] Type (arrow or not)
     - [x] On click
         - [x] Creation window

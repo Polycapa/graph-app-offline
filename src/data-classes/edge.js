@@ -33,6 +33,14 @@ class Edge {
         this._arrowColor = value;
     }
 
+    get label() {
+        return this._label || '';
+    }
+
+    set label(value) {
+        this._label = value;
+    }
+
     get data() {
         return {
             id: `e${this.id}`,
@@ -40,7 +48,8 @@ class Edge {
             target: this.target.fullId,
             color: this.color,
             arrowColor: this.arrow,
-            oriented: this.oriented
+            oriented: this.oriented,
+            label: this.label
         };
     }
 }
