@@ -12,6 +12,7 @@
       #graph {
         width: 100vw;
         height: 100vh;
+        position: absolute;
       }
     </style>
 
@@ -44,6 +45,8 @@
       ready() {
         super.ready();
         this.graph = new Graph(cytoscape, this.$.graph);
+        // Fix from Chrome : if not done, elements added after disappear
+        this.$.graph.style.backgroundColor = 'white';
         this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
       }
 
