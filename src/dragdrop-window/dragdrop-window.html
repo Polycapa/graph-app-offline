@@ -84,20 +84,56 @@
             handleTrack(e) {
                 switch (e.detail.state) {
                     case 'start':
-                        this.updateZIndex(2)
+                        this.updateZIndex(2);
+                        this.emit('drag-start', {
+                            x: this.getLeftPos(),
+                            y: this.getTopPos(),
+                        })
                         break;
                     case 'track':
                         this.updateZIndex(100);
                         this.updatePos(e.detail.y - this.mouseRelativePos.y,
                             e.detail.x - this.mouseRelativePos.x);
+                        this.emit('drag', {
+                            x: this.getLeftPos(),
+                            y: this.getTopPos(),
+                        })
                         break;
                     case 'end':
-                        this.updateZIndex(2)
+                        this.updateZIndex(2);
+                        this.emit('drag-end', {
+                            x: this.getLeftPos(),
+                            y: this.getTopPos(),
+                        })
                         break;
                 }
                 // console.log(this.message);
                 e.preventDefault();
 
+            }
+
+            getTopPos() {
+                let style;
+                if (window.ShadyCSS) {
+                    style = ShadyCSS.getComputedStyleValue(this, '--top-pos');
+                } else {
+                    style = getComputedStyle(el).getPropertyValue('--top-pos');
+                }
+
+                style = Number(style.substring(0, style.indexOf('px')));
+                return style;
+            }
+
+            getLeftPos() {
+                let style;
+                if (window.ShadyCSS) {
+                    style = ShadyCSS.getComputedStyleValue(this, '--left-pos');
+                } else {
+                    style = getComputedStyle(el).getPropertyValue('--left-pos');
+                }
+
+                style = Number(style.substring(0, style.indexOf('px')));
+                return style;
             }
 
             updatePos(top, left) {
@@ -123,6 +159,14 @@
                 this.updateStyles({
                     '--z-index': zIndex
                 });
+            }
+
+            emit(eventName, data) {
+                let event = new CustomEvent(eventName, {
+                    detail: data
+                });
+
+                this.dispatchEvent(event);
             }
 
         }
