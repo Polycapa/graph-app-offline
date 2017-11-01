@@ -1,4 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 
 <dom-module id="legend-element">
@@ -32,29 +35,57 @@
             }
 
             .legend {
-                background: red;
                 text-align: center;
                 color: white;
                 padding: 5px;
                 margin: 5px;
                 cursor: pointer;
             }
+
+            .title {
+                font-weight: bold;
+                font-size: 17px;
+                margin-left: 10px;
+            }
+
+            label {
+                font-size: 16px;
+                font-weight: lighter;
+                margin-right: 5px;
+            }
+
+            .input {
+                margin: 3px;
+            }
+
+            .inputs {
+                padding: 5px;
+            }
         </style>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
             <div id="legend" class="vertical layout">
-                <div class="legend">Legend
+                <div class="horizontal center end-justified layout">
+                    <div class="flex title">Legend</div>
+                    <paper-icon-button icon="add" on-click="showInputs" id="inputsIcon"></paper-icon-button>
                 </div>
-                <div class="legend">Legend
-                </div>
-                <div class="legend">Legend
-                </div>
-                <div class="legend">Legend
-                </div>
-                <div class="legend">Legend
-                </div>
-                <div class="legend">Legend
-                </div>
+                <iron-collapse id="inputs">
+                    <div class="horizontal center layout input">
+                        <label for="label">Label</label>
+                        <input type="text" name="label" id="labelInput" class="flex">
+                    </div>
+                    <div class="horizontal center layout input">
+                        <label for="color">Color</label>
+                        <input type="color" name="color" id="colorInput" placeholder="Color" value="#ff0000" class="flex">
+                    </div>
+                </iron-collapse>
+                <iron-collapse id="legends" opened>
+                    <template is="dom-repeat" items="{{legends}}">
+                        <div class="legend" style$="background-color:{{item.color}}">
+                            {{item.label}}
+                        </div>
+                    </template>
+                </iron-collapse>
             </div>
         </dragdrop-window>
 
@@ -93,6 +124,12 @@
                     left: {
                         type: Number,
                         value: 100
+                    },
+                    legends: {
+                        type: Object,
+                        value: () => {
+                            return []
+                        }
                     }
                 };
             }
@@ -128,6 +165,23 @@
 
                 if (this.savePosition) {
                     localStorage.setItem('graph-legend-position', JSON.stringify(e.detail));
+                }
+            }
+
+            showInputs() {
+                this.$.inputs.toggle();
+                this.$.legends.toggle();
+
+                this.$.inputsIcon.icon = this.$.inputs.opened ? 'save' : 'add';
+
+                if (this.$.inputs.opened) {
+                    this.$.labelInput.value = '';
+                    this.$.colorInput.value = '';
+                } else {
+                    this.push('legends', {
+                        label: this.$.labelInput.value = '',
+                        color: this.$.colorInput.value
+                    })
                 }
             }
 
