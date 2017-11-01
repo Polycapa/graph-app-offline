@@ -29,7 +29,7 @@ class Graph {
                     'label': 'data(label)',
                     'color': 'black',
                     'text-rotation': 'autorotate',
-                    'text-margin-y': -10
+                    'text-margin-y': -15
                 }
             }, {
                 selector: 'node.selected',
