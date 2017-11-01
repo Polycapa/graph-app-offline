@@ -3,11 +3,11 @@
 TODO
 
 - [x] Display a graph
-- [ ] Add node
+- [x] Add node
     - [x] Color
     - [x] Label
     - [x] On click
-        - [ ] Creation window
+        - [x] Creation window
 - [ ] Add edge
     - [x] Color
     - [ ] Label
@@ -17,9 +17,12 @@ TODO
 - [x] Move node
 - [x] Delete node
 - [x] Delete edge
+- [ ] Edit node
+- [ ] Edit edge
 - [ ] Legend
 - [ ] Drag and drop window
 - [ ] LocalStorage
 - [ ] PNG export
 - [ ] File export
 - [ ] Read only URL (export a graph into an url)
+- [ ] Groups
