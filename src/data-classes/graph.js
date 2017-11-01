@@ -182,8 +182,14 @@ class Graph {
         return typeof node.data === "function" ? node.data() : node.data;
     }
 
-    updateNodeData(node, property, value) {
-        this.cy.$(`#${this.getNodeData(node).id}`).data(property, value);
+    updateNodeProperty(nodeId, property, value) {
+        this.cy.$(`#${nodeId}`).data(property, value);
+    }
+
+    updateNodeData(nodeId, data) {
+        for (var key in data) {
+            this.updateNodeProperty(nodeId, key, data[key]);
+        }
     }
 
     unselectAllNodes() {
@@ -329,7 +335,6 @@ class Graph {
         node.toggleClass('selected');
 
         if (node.hasClass('selected')) {
-            console.log(this.cyToNode(node));
             this.onNodeSelection(this.cyToNode(node));
         }
 
