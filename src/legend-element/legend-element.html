@@ -3,18 +3,19 @@
 
 <dom-module id="legend-element">
     <template>
-        <style>
+        <style include="shared-styles">
              :host {
                 display: block
             }
 
             #legend {
-                background: rgba(255, 255, 255, 0.9);
+                background: rgba(240, 239, 239, 0.9);
+                position: fixed;
             }
 
             @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
                 #legend {
-                    background-color: rgba(255, 255, 255, .5);
+                    background: rgba(240, 239, 239, 0.5);
                     -webkit-backdrop-filter: blur(5px);
                     backdrop-filter: blur(5px);
                 }
@@ -27,12 +28,33 @@
                 border-radius: 5px;
                 padding: 5px;
                 @apply(--shadow-elevation-2dp);
+                cursor: move;
+            }
+
+            .legend {
+                background: red;
+                text-align: center;
+                color: white;
+                padding: 5px;
+                margin: 5px;
+                cursor: pointer;
             }
         </style>
 
-        <dragdrop-window id="dragdrop" bottomRight right="100" bottom="100">
-            <div id="legend">
-                Test
+        <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
+            <div id="legend" class="vertical layout">
+                <div class="legend">Legend
+                </div>
+                <div class="legend">Legend
+                </div>
+                <div class="legend">Legend
+                </div>
+                <div class="legend">Legend
+                </div>
+                <div class="legend">Legend
+                </div>
+                <div class="legend">Legend
+                </div>
             </div>
         </dragdrop-window>
 
@@ -60,7 +82,18 @@
              */
             static get properties() {
                 return {
-
+                    savePosition: {
+                        type: Boolean,
+                        value: false
+                    },
+                    top: {
+                        type: Number,
+                        value: 100
+                    },
+                    left: {
+                        type: Number,
+                        value: 100
+                    }
                 };
             }
 
@@ -79,9 +112,23 @@
             ready() {
                 super.ready();
 
-                Polymer.RenderStatus.afterNextRender(this, function () {
+                if (this.savePosition) {
+                    let position = localStorage.getItem('graph-legend-position');
+                    if (position) {
+                        position = JSON.parse(position);
+                        this.top = position.y;
+                        this.left = position.x;
+                    }
+                }
+            }
 
-                });
+            _savePosition(e) {
+                this.top = e.detail.y;
+                this.left = e.detail.x;
+
+                if (this.savePosition) {
+                    localStorage.setItem('graph-legend-position', JSON.stringify(e.detail));
+                }
             }
 
         }
