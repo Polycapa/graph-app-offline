@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../addnode-dialog/addnode-dialog.html">
+<link rel="import" href="../addedge-dialog/addedge-dialog.html">
 
 <dom-module id="graph-app">
   <template>
@@ -17,6 +18,7 @@
     </style>
 
     <addnode-dialog id="nodeDialog" on-add-node="_addNode"></addnode-dialog>
+    <addedge-dialog id="edgeDialog" on-add-edge="_addEdge"></addedge-dialog>
 
     <div id="graph">
 
@@ -48,11 +50,17 @@
         // Fix from Chrome : if not done, elements added after disappear
         this.$.graph.style.backgroundColor = 'white';
         this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
+        this.graph.beforeEdgeCreation = this.$.edgeDialog.open.bind(this.$.edgeDialog);
       }
 
       _addNode(e) {
         let data = e.detail;
         this.graph.addNode(data.x, data.y, data.label, data.color);
+      }
+
+      _addEdge(e) {
+        let data = e.detail;
+        this.graph.addEdge(data.source, data.target, data.color, data.oriented, data.arrowColor);
       }
     }
 
