@@ -372,13 +372,14 @@ class Graph {
 
     _nodeClick(e) {
         let node = e.target;
+        let mousePosition = e.renderedPosition;
         if (this.selectedNodes.length >= 2 && !node.hasClass('selected')) {
             return;
         }
         node.toggleClass('selected');
 
         if (node.hasClass('selected')) {
-            this.onNodeSelection(this.cyToNode(node));
+            this.onNodeSelection(this.cyToNode(node), mousePosition);
         }
 
         if (this.selectedNodes.length === 2) {
@@ -400,12 +401,13 @@ class Graph {
             let source = new Node(sourceData.id, sourceData.x, sourceData.y);
             let target = new Node(targetData.id, targetData.x, targetData.y);
 
-            this.beforeEdgeCreation(source, target);
+            this.beforeEdgeCreation(source, target, mousePosition);
         }
     }
 
     _edgeClick(e) {
         let clickedEdge = e.target;
+        let mousePosition = e.renderedPosition;
         let alreadySelected = clickedEdge.hasClass('selected');
 
         // Unselect all edges
@@ -416,17 +418,20 @@ class Graph {
 
         if (!alreadySelected) {
             clickedEdge.addClass('selected');
-            this.onEdgeSelection(this.cyToEdge(clickedEdge));
+            this.onEdgeSelection(this.cyToEdge(clickedEdge), mousePosition);
         }
     }
 
     _rightClick(e) {
         let target = e.target;
         let position = e.position;
+        let mousePosition = e.renderedPosition;
+
+        console.log(e);
 
         if (target === this.cy) {
             // Right click on background, insert node
-            this.beforeNodeCreation(position.y, position.x);
+            this.beforeNodeCreation(position, mousePosition);
         } else if (target.isNode()) {
             // Remove node
             this.remove(this.getNodeData(target).id);

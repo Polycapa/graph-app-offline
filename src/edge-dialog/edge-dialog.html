@@ -3,14 +3,13 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../dragdrop-window/dragdrop-window.html">
 
 <dom-module id="edge-dialog">
     <template>
         <style include="shared-styles">
              :host {
                 display: block;
-                --top-pos: 100px;
-                --left-pos: 100px;
             }
 
             #form,
@@ -32,11 +31,6 @@
                 min-height: 100px;
                 border-radius: 3px;
                 padding: 5px;
-
-                position: fixed;
-                top: var(--top-pos);
-                left: var(--left-pos);
-                z-index: 2;
 
                 @apply(--shadow-elevation-8dp);
             }
@@ -63,6 +57,7 @@
                 padding: 5px;
                 border-bottom: 1px solid var(--paper-grey-200);
                 margin-bottom: 5px;
+                cursor: move;
             }
 
             label {
@@ -76,38 +71,40 @@
             }
         </style>
 
-        <div id="form" hidden>
-            <div class="vertical layout">
-                <div class="horizontal center layout title">
-                    <div class="flex" style="text-align:center">
-                        <div hidden$="{{!isEditing}}">Edit edge</div>
-                        <div hidden$="{{isEditing}}">Add edge</div>
+        <dragdrop-window id="dragdrop">
+            <div id="form" hidden>
+                <div class="vertical layout">
+                    <div class="horizontal center layout title">
+                        <div class="flex" style="text-align:center">
+                            <div hidden$="{{!isEditing}}">Edit edge</div>
+                            <div hidden$="{{isEditing}}">Add edge</div>
+                        </div>
+                        <paper-icon-button icon="close" on-click="close"></paper-icon-button>
                     </div>
-                    <paper-icon-button icon="close" on-click="close"></paper-icon-button>
-                </div>
-                <div class="horizontal center layout input">
-                    <label for="label">Label</label>
-                    <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
-                </div>
-                <div class="horizontal center layout input">
-                    <label for="color">Color</label>
-                    <input type="color" name="color" id="colorInput" value="{{data.color}}" placeholder="Color" class="flex">
-                </div>
-                <div class="horizontal center layout input">
-                    <label for="color">Arrow color</label>
-                    <input type="color" name="color" id="arrowColorInput" value="{{data.arrowColor}}" placeholder="Color" class="flex">
-                </div>
-                <div class="horizontal center layout input">
-                    <label for="oriented">Oriented</label>
-                    <paper-toggle-button checked="{{data.oriented}}"></paper-toggle-button>
-                </div>
+                    <div class="horizontal center layout input">
+                        <label for="label">Label</label>
+                        <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
+                    </div>
+                    <div class="horizontal center layout input">
+                        <label for="color">Color</label>
+                        <input type="color" name="color" id="colorInput" value="{{data.color}}" placeholder="Color" class="flex">
+                    </div>
+                    <div class="horizontal center layout input">
+                        <label for="color">Arrow color</label>
+                        <input type="color" name="color" id="arrowColorInput" value="{{data.arrowColor}}" placeholder="Color" class="flex">
+                    </div>
+                    <div class="horizontal center layout input">
+                        <label for="oriented">Oriented</label>
+                        <paper-toggle-button checked="{{data.oriented}}"></paper-toggle-button>
+                    </div>
 
-                <div class="horizontal center center-justified layout">
-                    <paper-button on-click="save">Save</paper-button>
-                </div>
+                    <div class="horizontal center center-justified layout">
+                        <paper-button on-click="save">Save</paper-button>
+                    </div>
 
+                </div>
             </div>
-        </div>
+        </dragdrop-window>
 
     </template>
 
@@ -153,19 +150,14 @@
                 };
             }
 
-            open(source, target) {
+            open(source, target, mousePosition) {
                 if (!source || !target) {
                     return;
                 }
                 this.data.source = source;
                 this.data.target = target;
 
-                this.updateStyles({
-                    '--top-pos': source.y + 'px'
-                });
-                this.updateStyles({
-                    '--left-pos': source.x + 'px'
-                });
+                this.$.dragdrop.updatePos(mousePosition.y, mousePosition.x);
 
                 this.$.form.hidden = false;
             }
@@ -201,10 +193,10 @@
                 this.isEditing = false;
             }
 
-            edit(edge) {
+            edit(edge, mousePosition) {
                 this.data = edge.data;
                 this.isEditing = true;
-                this.open(edge.data.source, edge.data.target);
+                this.open(edge.data.source, edge.data.target, mousePosition);
             }
         }
 

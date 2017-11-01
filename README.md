@@ -19,8 +19,10 @@ TODO
 - [x] Delete edge
 - [x] Edit node
 - [x] Edit edge
+- [x] Drag and drop window
+    - [x] Remove window position
+    - [x] Drag and drop
 - [ ] Legend
-- [ ] Drag and drop window
 - [ ] LocalStorage
 - [ ] PNG export
 - [ ] File export
