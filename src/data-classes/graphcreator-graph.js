@@ -1,7 +1,7 @@
 class GraphCreatorGraph {
 
     // Init graph with cytoscape library
-    constructor(cytoscape, container, style) {
+    constructor(cytoscape, container, style, localStorageKey) {
         if (!cytoscape && !container) {
             throw new Error('Missing parameters');
         }
@@ -54,6 +54,12 @@ class GraphCreatorGraph {
             this.nodeColor = style.nodeColor;
             this.edgeColor = style.edgeColor;
             this.edgeArrowColor = style.edgeArrowColor;
+        }
+
+        this.localStorageKey = localStorageKey;
+
+        if (this.localStorageKey) {
+            this.loadFromStorage();
         }
     }
 
@@ -162,7 +168,34 @@ class GraphCreatorGraph {
         this._onEdgeSelection = value;
     }
 
+    get json() {
+        return this.cy.json();
+    }
 
+    set json(value) {
+        this.cy.json(value);
+    }
+
+    loadFromStorage() {
+        if (this.localStorageKey) {
+            let data = localStorage.getItem(this.localStorageKey);
+            if (data) {
+                this.json = JSON.parse(data);
+            } else {
+                console.info('No data in localStorage');
+            }
+        } else {
+            console.error('Missing localStorage key to retrieve data');
+        }
+    }
+
+    saveToStorage() {
+        if (this.localStorageKey) {
+            localStorage.setItem(this.localStorageKey, JSON.stringify(this.json));
+        } else {
+            console.error('Missing localStorage key to save data');
+        }
+    }
 
     //endregion    
 
@@ -320,6 +353,8 @@ class GraphCreatorGraph {
 
         this.unselectAllNodes();
 
+        this.saveToStorage();
+
         return node;
     }
 
@@ -355,6 +390,8 @@ class GraphCreatorGraph {
         this.unselectAllEdges();
         this.unselectAllNodes();
 
+        this.saveToStorage();
+
         return edge;
     }
     //endregion
@@ -364,6 +401,8 @@ class GraphCreatorGraph {
     remove(id) {
         let item = this.cy.$(`#${id}`);
         this.cy.remove(item);
+
+        this.saveToStorage();
     }
 
     //endregion
@@ -426,8 +465,6 @@ class GraphCreatorGraph {
         let target = e.target;
         let position = e.position;
         let mousePosition = e.renderedPosition;
-
-        console.log(e);
 
         if (target === this.cy) {
             // Right click on background, insert node

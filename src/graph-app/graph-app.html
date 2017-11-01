@@ -50,7 +50,7 @@
 
       ready() {
         super.ready();
-        this.graph = new GraphCreatorGraph(cytoscape, this.$.graph);
+        this.graph = new GraphCreatorGraph(cytoscape, this.$.graph, {}, 'graph-data');
         // Fix from Chrome : if not done, elements added after disappear
         this.$.graph.style.backgroundColor = 'white';
 
