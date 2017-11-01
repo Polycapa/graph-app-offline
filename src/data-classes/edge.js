@@ -6,7 +6,7 @@ class Edge {
         this._id = id;
         this.source = source;
         this.target = target;
-        this.oriented = oriented === undefined ? false : true;
+        this.oriented = oriented;
     }
 
     get fullId() {
