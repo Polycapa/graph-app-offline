@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<dom-module id="addnode-dialog">
+<dom-module id="node-dialog">
     <template>
         <style include="shared-styles">
              :host {
@@ -103,19 +103,19 @@
 
     <script>
         /**
-         * `addnode-dialog` Description
+         * `node-dialog` Description
          *
          * @summary ShortDescription.
          * @customElement
          * @polymer
          * @extends {Polymer.Element}
          */
-        class AddNodeDialog extends Polymer.Element {
+        class NodeDialog extends Polymer.Element {
             /**
              * String providing the tag name to register the element under.
              */
             static get is() {
-                return 'addnode-dialog';
+                return 'node-dialog';
             }
 
             /**
@@ -181,6 +181,6 @@
             }
         }
 
-        window.customElements.define(AddNodeDialog.is, AddNodeDialog);
+        window.customElements.define(NodeDialog.is, NodeDialog);
     </script>
 </dom-module>

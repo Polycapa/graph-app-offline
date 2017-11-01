@@ -13,7 +13,7 @@ TODO
     - [ ] Label
     - [x] Type (arrow or not)
     - [x] On click
-        - [ ] Creation window
+        - [x] Creation window
 - [x] Move node
 - [x] Delete node
 - [x] Delete edge

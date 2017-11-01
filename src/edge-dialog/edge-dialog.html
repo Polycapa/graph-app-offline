@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
-<dom-module id="addedge-dialog">
+<dom-module id="edge-dialog">
     <template>
         <style include="shared-styles">
              :host {
@@ -106,19 +106,19 @@
 
     <script>
         /**
-         * `addedge-dialog` Description
+         * `edge-dialog` Description
          *
          * @summary ShortDescription.
          * @customElement
          * @polymer
          * @extends {Polymer.Element}
          */
-        class AddEdgeDialog extends Polymer.Element {
+        class EdgeDialog extends Polymer.Element {
             /**
              * String providing the tag name to register the element under.
              */
             static get is() {
-                return 'addedge-dialog';
+                return 'edge-dialog';
             }
 
             /**
@@ -186,6 +186,6 @@
             }
         }
 
-        window.customElements.define(AddEdgeDialog.is, AddEdgeDialog);
+        window.customElements.define(EdgeDialog.is, EdgeDialog);
     </script>
 </dom-module>

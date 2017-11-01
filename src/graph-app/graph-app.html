@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../shared-styles.html">
-<link rel="import" href="../addnode-dialog/addnode-dialog.html">
-<link rel="import" href="../addedge-dialog/addedge-dialog.html">
+<link rel="import" href="../node-dialog/node-dialog.html">
+<link rel="import" href="../edge-dialog/edge-dialog.html">
 
 <dom-module id="graph-app">
   <template>
@@ -17,8 +17,8 @@
       }
     </style>
 
-    <addnode-dialog id="nodeDialog" on-add-node="_addNode"></addnode-dialog>
-    <addedge-dialog id="edgeDialog" on-add-edge="_addEdge"></addedge-dialog>
+    <node-dialog id="nodeDialog" on-add-node="_addNode"></node-dialog>
+    <edge-dialog id="edgeDialog" on-add-edge="_addEdge"></edge-dialog>
 
     <div id="graph">
 
