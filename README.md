@@ -17,8 +17,8 @@ TODO
 - [x] Move node
 - [x] Delete node
 - [x] Delete edge
-- [ ] Edit node
-- [ ] Edit edge
+- [x] Edit node
+- [x] Edit edge
 - [ ] Legend
 - [ ] Drag and drop window
 - [ ] LocalStorage
