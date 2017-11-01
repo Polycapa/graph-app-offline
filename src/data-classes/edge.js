@@ -39,7 +39,8 @@ class Edge {
             source: this.source.fullId,
             target: this.target.fullId,
             color: this.color,
-            arrowColor: this.arrow
+            arrowColor: this.arrow,
+            oriented: this.oriented
         };
     }
 }

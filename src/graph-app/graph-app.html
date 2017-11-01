@@ -18,7 +18,7 @@
     </style>
 
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode"></node-dialog>
-    <edge-dialog id="edgeDialog" on-add-edge="_addEdge"></edge-dialog>
+    <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge"></edge-dialog>
 
     <div id="graph">
 
@@ -54,6 +54,7 @@
         this.graph.beforeEdgeCreation = this.$.edgeDialog.open.bind(this.$.edgeDialog);
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
+        this.graph.onEdgeSelection = this.$.edgeDialog.edit.bind(this.$.edgeDialog);
       }
 
       _addNode(e) {
@@ -70,6 +71,12 @@
       _addEdge(e) {
         let data = e.detail;
         this.graph.addEdge(data.source, data.target, data.color, data.oriented, data.arrowColor);
+      }
+
+      _editEdge(e) {
+        let data = e.detail;
+        this.graph.updateEdgeData(data.id, data);
+        this.graph.unselectAllEdges();
       }
     }
 

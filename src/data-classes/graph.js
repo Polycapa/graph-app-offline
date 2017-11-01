@@ -148,6 +148,18 @@ class Graph {
         this._beforeEdgeCreation = value;
     }
 
+    get onEdgeSelection() {
+        return this._onEdgeSelection || (_ => {});
+    }
+
+    set onEdgeSelection(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._onEdgeSelection = value;
+    }
+
 
 
     //endregion    
@@ -177,6 +189,9 @@ class Graph {
         return this.lastNodeId !== undefined ? this.lastNodeId + 1 : 0;
     }
 
+    getNode(nodeId) {
+        return this.cyToNode(this.cy.$(`#${nodeId}`));
+    }
 
     getNodeData(node) {
         return typeof node.data === "function" ? node.data() : node.data;
@@ -231,17 +246,41 @@ class Graph {
         return this.lastEdgeId !== undefined ? this.lastEdgeId + 1 : 0;
     }
 
+    getEdge(edgeId) {
+        return this.cyToEdge(this.cy.$(`#${edgeId}`));
+    }
 
     getEdgeData(edge) {
         return typeof edge.data === "function" ? edge.data() : edge.data;
     }
 
-    updateEdgeData(edge, property, value) {
-        this.cy.$(`#${this.getEdgeData(edge).id}`).data(property, value);
+    updateEdgeProperty(edgeId, property, value) {
+        let edge = this.cy.$(`#${edgeId}`);
+        edge.data(property, value);
+
+        if (property === 'oriented') {
+            edge.style({
+                'mid-target-arrow-shape': edge.oriented ? 'triangle' : 'none'
+            })
+        }
+    }
+
+    updateEdgeData(edgeId, data) {
+        for (var key in data) {
+            this.updateEdgeProperty(edgeId, key, data[key]);
+        }
     }
 
     unselectAllEdges() {
         this.selectedEdges.forEach(edge => edge.removeClass('selected'));
+    }
+
+    cyToEdge(cyEdge) {
+        let data = this.getEdgeData(cyEdge);
+        let edge = new Edge(data.id, this.getNode(data.source), this.getNode(data.target), data.oriented);
+        edge.arrowColor = data.arrowColor;
+        edge.color = data.color;
+        return edge;
     }
     //endregion
 
@@ -275,7 +314,6 @@ class Graph {
             position: node.position,
             grabbable: true
         });
-
 
         this.unselectAllNodes();
 
@@ -373,6 +411,7 @@ class Graph {
 
         if (!alreadySelected) {
             clickedEdge.addClass('selected');
+            this.onEdgeSelection(this.cyToEdge(clickedEdge));
         }
     }
 

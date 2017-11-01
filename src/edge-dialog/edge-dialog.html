@@ -79,7 +79,10 @@
         <div id="form" hidden>
             <div class="vertical layout">
                 <div class="horizontal center layout title">
-                    <div class="flex" style="text-align:center">Add edge</div>
+                    <div class="flex" style="text-align:center">
+                        <div hidden$="{{!isEditing}}">Edit edge</div>
+                        <div hidden$="{{isEditing}}">Add edge</div>
+                    </div>
                     <paper-icon-button icon="close" on-click="close"></paper-icon-button>
                 </div>
                 <div class="horizontal center layout input">
@@ -137,6 +140,10 @@
                                 color: '#ff0000'
                             }
                         }
+                    },
+                    isEditing: {
+                        type: Boolean,
+                        value: false
                     }
                 };
             }
@@ -167,7 +174,8 @@
                 this.data.color = this.$.colorInput.value;
                 this.data.arrowColor = this.$.arrowColorInput.value;
 
-                let event = new CustomEvent('add-edge', {
+                let eventName = this.isEditing ? 'edit-edge' : 'add-edge';
+                let event = new CustomEvent(eventName, {
                     detail: this.data
                 })
                 this.dispatchEvent(event);
@@ -183,6 +191,13 @@
                     arrowColor: '#000000',
                     color: '#ff0000'
                 };
+                this.isEditing = false;
+            }
+
+            edit(edge) {
+                this.data = edge.data;
+                this.isEditing = true;
+                this.open(edge.data.source, edge.data.target);
             }
         }
 
