@@ -55,7 +55,10 @@
         this.$.graph.style.backgroundColor = 'white';
 
         this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
-        this.graph.beforeEdgeCreation = this.$.edgeDialog.open.bind(this.$.edgeDialog);
+        this.graph.beforeEdgeCreation = (source, target, mousePosition) => {
+          this.$.nodeDialog.close();
+          this.$.edgeDialog.open(source, target, mousePosition);
+        }
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
         this.graph.onEdgeSelection = this.$.edgeDialog.edit.bind(this.$.edgeDialog);
