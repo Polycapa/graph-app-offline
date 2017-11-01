@@ -8,13 +8,14 @@
                 display: block;
                 --top-pos: 0;
                 --left-pos: 0;
+                --z-index: 2;
             }
 
             #drag {
                 position: fixed;
                 top: var(--top-pos);
                 left: var(--left-pos);
-                z-index: 2;
+                z-index: var(--z-index);
             }
         </style>
 
@@ -71,22 +72,27 @@
             saveMouseRelativePos(e) {
                 this.mouseRelativePos.x = e.pageX - this.$.drag.offsetLeft;
                 this.mouseRelativePos.y = e.pageY - this.$.drag.offsetTop;
+                this.updateZIndex(100);
             }
 
             resetMouseRelativePos(e) {
                 this.mouseRelativePos.x = 0;
                 this.mouseRelativePos.y = 0;
+                this.updateZIndex(2);
             }
 
             handleTrack(e) {
                 switch (e.detail.state) {
                     case 'start':
+                        this.updateZIndex(2)
                         break;
                     case 'track':
+                        this.updateZIndex(100);
                         this.updatePos(e.detail.y - this.mouseRelativePos.y,
                             e.detail.x - this.mouseRelativePos.x);
                         break;
                     case 'end':
+                        this.updateZIndex(2)
                         break;
                 }
                 // console.log(this.message);
@@ -110,6 +116,12 @@
             updateLeftPos(left) {
                 this.updateStyles({
                     '--left-pos': left + 'px'
+                });
+            }
+
+            updateZIndex(zIndex) {
+                this.updateStyles({
+                    '--z-index': zIndex
                 });
             }
 
