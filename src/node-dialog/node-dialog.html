@@ -11,14 +11,12 @@
                 display: block;
             }
 
-            #form,
-            input {
+            #form {
                 background: rgba(255, 255, 255, 0.9);
             }
 
             @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
-                #form,
-                input {
+                #form {
                     background-color: rgba(255, 255, 255, .5);
                     -webkit-backdrop-filter: blur(5px);
                     backdrop-filter: blur(5px);
@@ -29,7 +27,6 @@
                 width: 300px;
                 min-height: 100px;
                 border-radius: 3px;
-                padding: 5px;
                 @apply(--shadow-elevation-8dp);
             }
 
@@ -56,6 +53,9 @@
                 border-bottom: 1px solid var(--paper-grey-200);
                 margin-bottom: 5px;
                 cursor: move;
+                background: white;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
             }
 
             label {
@@ -66,6 +66,10 @@
 
             .input {
                 margin: 3px;
+            }
+
+            .inputs {
+                padding: 5px;
             }
         </style>
 
@@ -81,17 +85,20 @@
                         <paper-icon-button icon="close" on-click="close"></paper-icon-button>
 
                     </div>
-                    <div class="horizontal center layout input">
-                        <label for="label">Label</label>
-                        <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
-                    </div>
-                    <div class="horizontal center layout input">
-                        <label for="color">Color</label>
-                        <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
-                    </div>
+                    <div class="inputs">
 
-                    <div class="horizontal center center-justified layout">
-                        <paper-button on-click="save">Save</paper-button>
+                        <div class="horizontal center layout input">
+                            <label for="label">Label</label>
+                            <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
+                        </div>
+                        <div class="horizontal center layout input">
+                            <label for="color">Color</label>
+                            <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
+                        </div>
+
+                        <div class="horizontal center center-justified layout">
+                            <paper-button on-click="save">Save</paper-button>
+                        </div>
                     </div>
 
                 </div>
