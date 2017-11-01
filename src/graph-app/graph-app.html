@@ -2,6 +2,7 @@
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../node-dialog/node-dialog.html">
 <link rel="import" href="../edge-dialog/edge-dialog.html">
+<link rel="import" href="../legend-element/legend-element.html">
 
 <dom-module id="graph-app">
   <template>
@@ -20,6 +21,7 @@
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode"></node-dialog>
     <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge"></edge-dialog>
 
+    <legend-element></legend-element>
     <div id="graph">
 
     </div>
