@@ -125,6 +125,10 @@
                         type: Boolean,
                         value: false
                     },
+                    saveLegend: {
+                        type: Boolean,
+                        value: false
+                    },
                     top: {
                         type: Number,
                         value: 100
@@ -165,6 +169,10 @@
                         this.left = position.x;
                     }
                 }
+
+                if (this.saveLegend) {
+                    this.loadFromStorage();
+                }
             }
 
             _savePosition(e) {
@@ -189,13 +197,32 @@
                     this.push('legends', {
                         label: this.$.labelInput.value,
                         color: this.$.colorInput.value
-                    })
+                    });
+
+                    this.saveToStorage();
                 }
             }
 
             deleteLegend(e) {
                 let index = e.model.index;
                 this.splice('legends', index, 1);
+            }
+
+            saveToStorage() {
+                if (this.saveLegend) {
+                    localStorage.setItem('graph-legend', JSON.stringify(this.legends));
+                }
+            }
+
+            loadFromStorage() {
+                let data = localStorage.getItem('graph-legend');
+                if (data) {
+                    try {
+                        this.legends = JSON.parse(data);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
             }
 
         }
