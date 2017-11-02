@@ -26,7 +26,7 @@
 
 
 
-    <legend-element save-position id="legend" legends="{{legends}}"></legend-element>
+    <legend-element save-position id="legend" legends="{{legends}}" on-legends-updated="_updateEdgeAutocomplete"></legend-element>
     <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
     <option-window id="optionsWindow" save-position></option-window>
 
@@ -253,6 +253,11 @@
         let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
         this.$.copyWindow.text = graphUrl;
         this.$.copyWindow.open();
+      }
+
+      _updateEdgeAutocomplete(e) {
+        console.log(e.detail);
+        this.$.edgeDialog.legends = e.detail;
       }
     }
 

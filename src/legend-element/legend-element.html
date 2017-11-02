@@ -188,6 +188,11 @@
                         });
 
                         this.saveToStorage();
+
+                        let event = new CustomEvent('legends-updated', {
+                            detail: this.legends
+                        });
+                        this.dispatchEvent(event);
                     }
 
                     this.$.actionWindow.actions = [{
@@ -205,6 +210,10 @@
                 let index = e.model.index;
                 this.splice('legends', index, 1);
                 this.saveToStorage();
+                let event = new CustomEvent('legends-updated', {
+                    detail: this.legends
+                });
+                this.dispatchEvent(event);
             }
 
             saveToStorage() {

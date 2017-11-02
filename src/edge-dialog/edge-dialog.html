@@ -5,7 +5,8 @@
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
-<link rel="import" href="../../bower_components/paper-autocomplete/paper-autocomplete.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
 
@@ -46,6 +47,19 @@
             .inputs {
                 padding: 5px;
             }
+
+            paper-item {
+                height: 20px;
+            }
+
+            .chip {
+                color: white;
+                border-radius: 10%;
+                padding: 10px;
+                font-size: 15px;
+                margin: 3px;
+                cursor: pointer;
+            }
         </style>
 
         <dragdrop-window id="dragdrop">
@@ -55,8 +69,13 @@
                     <div hidden$="{{isEditing}}">Add edge</div>
                 </div>
                 <div class="inputs">
-                    <paper-autocomplete label="Label" source="[[autocompleteLegends]]" id="labelInput" on-autocomplete-selected="_autocompleteSelected"
-                        always-float-label min-length="0" show-results-on-focus text="{{data.label}}"></paper-autocomplete>
+                    <paper-input label="Label" id="labelInput" always-float-label value="{{data.label::input}}"></paper-input>
+                    <div class="horizontal center around-justified wrap layout">
+                        <template is="dom-repeat" items="{{legends}}" as=item index-as=index filter="{{autocompleteFilter(data.label)}}">
+                            <div class="chip" style$="background-color:{{item.color}}" on-click="_autocompleteSelected" data-item$="{{item.label}}-{{item.color}}">[[item.label]]</div>
+                        </template>
+                    </div>
+
                     <div class="horizontal around-justified layout input">
                         <div>
                             <label for="color">
@@ -166,7 +185,7 @@
             }
 
             save() {
-                this.data.label = this.$.labelInput.text;
+                this.data.label = this.$.labelInput.value;
                 this.data.color = this.$.colorInput.color;
                 this.data.arrowColor = this.$.arrowColorInput.color;
 
@@ -188,7 +207,6 @@
                     color: '#ff0000',
                     label: ''
                 };
-                this.$.labelInput.clear();
                 this.isEditing = false;
             }
 
@@ -209,15 +227,32 @@
                 }
 
                 this.set('autocompleteLegends', legends);
+                this.$.labelInput.source = legends;
             }
 
-            _autocompleteSelected() {
-                let input = this.$.labelInput;
-                setTimeout(() => {
-                    this.$.colorInput.color = input.value;
-                    this.data.label = input.text;
-                    this.data.color = input.value;
-                }, 100);
+            _autocompleteSelected(e) {
+                let target = e.target;
+                let data = e.target.getAttribute('data-item').split('-');
+                let item;
+
+                for (let legend of this.legends) {
+                    if (legend.label === data[0] && legend.color === data[1]) {
+                        item = legend;
+                        break;
+                    }
+                }
+
+                this.set('data.label', item.label);
+                this.$.labelInput.value = item.label;
+                this.$.colorInput.color = item.color;
+                this.data.color = item.value;
+            }
+
+            autocompleteFilter(search) {
+                return (item) => {
+                    return item.label.toLowerCase().indexOf(this.$.labelInput.value.toLowerCase()) !== -1 ||
+                        this.$.labelInput.value === '';
+                }
             }
         }
 
