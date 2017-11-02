@@ -245,7 +245,7 @@
       exportURL() {
         let location = window.location.origin;
         let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
-
+      }
     }
 
     window.customElements.define(GraphApp.is, GraphApp);
