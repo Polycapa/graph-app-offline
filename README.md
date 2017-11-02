@@ -34,7 +34,8 @@ Functionalities
 - [ ] Read only URL (export a graph into an url)
 - [x] Multiple graph
 - [ ] Realtime data update
-- [ ] Zoom
+- [x] Zoom
 - [ ] Groups
 - [x] Reduce window
 - [x] Legend autocomplete (autocomplete edge using legend)
+- [ ] Buttons (instead of clicking to add elements, click on button to select insertion mode)
