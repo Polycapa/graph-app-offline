@@ -98,7 +98,8 @@
                     },
                     storageKey: {
                         type: String,
-                        value: ''
+                        value: '',
+                        observer: 'loadFromStorage'
                     },
                     top: {
                         type: Number,
@@ -218,6 +219,8 @@
                     } else {
                         this.legends = [];
                     }
+                } else {
+                    this.legends = [];
                 }
             }
 

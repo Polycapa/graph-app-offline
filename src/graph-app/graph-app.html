@@ -88,6 +88,7 @@
       _resetGraph(e) {
         if (e.detail.key === this.graph.localStorageKey) {
           this.graph.localStorageKey = '';
+          this.$.legend.storageKey = '';
           this.graph.init();
           this.updateStyles({
             '--graph-background': 'white'
