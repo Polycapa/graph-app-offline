@@ -32,6 +32,6 @@ TODO
 - [ ] PNG export
 - [ ] File export
 - [ ] Read only URL (export a graph into an url)
-- [ ] Multiple graph
+- [x] Multiple graph
 - [ ] Groups
 - [ ] Reduce window
