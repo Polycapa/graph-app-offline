@@ -1,6 +1,6 @@
 # \<graph-app-offline\>
 
-TODO
+Functionalities
 
 - [x] Display a graph
 - [x] Add node
