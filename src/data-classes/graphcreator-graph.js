@@ -333,6 +333,7 @@ class GraphCreatorGraph {
         let node = new GraphCreatorNode(data.id, data.x, data.y);
         node.label = data.label;
         node.color = data.color;
+        node.parent = data.parent;
         return node;
     }
 
@@ -410,7 +411,7 @@ class GraphCreatorGraph {
      * @returns Node created
      * @memberof Graph
      */
-    addNode(x, y, label, color) {
+    addNode(x, y, label, color, parentId) {
         // Set node data
         label = label || '';
         color = color || this.nodeColor;
@@ -420,6 +421,7 @@ class GraphCreatorGraph {
         let node = new GraphCreatorNode(nextId, x, y);
         node.label = label;
         node.color = color || this.nodeColor;
+        node.parent = parentId;
 
         // Add it to graph
         this.cy.add({
