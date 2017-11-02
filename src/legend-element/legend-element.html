@@ -221,6 +221,18 @@
                 }
             }
 
+            show() {
+                this.$.actionWindow.open();
+            }
+
+            hide() {
+                this.$.actionWindow.close();
+            }
+
+            toggle() {
+                this.$.actionWindow.toggle();
+            }
+
         }
 
         window.customElements.define(LegendElement.is, LegendElement);
