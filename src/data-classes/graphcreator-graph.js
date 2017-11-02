@@ -281,8 +281,9 @@ class GraphCreatorGraph {
         if (this.localStorageKey) {
             let data = localStorage.getItem(this.localStorageKey);
             if (data) {
-                this.json = JSON.parse(data);
-                this.loadGroups(JSON.parse(data));
+                data = JSON.parse(data);
+                this.json = data;
+                this.loadGroups(data);
             } else {
                 this.init();
             }
@@ -319,8 +320,7 @@ class GraphCreatorGraph {
 
         for (var key in groups) {
             let group = this.getNodeData(this.getNode(key));
-            this.addGroup(groups[key], group.label, group.color);
-            this.remove(group.id);
+            this.addGroup(groups[key], group.label, group.color, group.id);
         }
     }
 
@@ -558,7 +558,7 @@ class GraphCreatorGraph {
         return edge;
     }
 
-    addGroup(nodesId, label, color) {
+    addGroup(nodesId, label, color, groupId) {
         if (nodesId.length === 0) {
             return;
         }
@@ -566,6 +566,7 @@ class GraphCreatorGraph {
 
         label = label || '';
         color = color || this.nodeColor;
+        groupId = groupId || this.nextNodeId;
 
         let nodes = [];
         let edges = [];
@@ -575,7 +576,7 @@ class GraphCreatorGraph {
             y: undefined
         };
 
-        let groupId = this.nextNodeId;
+
 
         for (let id of nodesId) {
             let node = this.getNode(id)
@@ -591,6 +592,7 @@ class GraphCreatorGraph {
             this.remove(node.fullId);
         }
 
+        this.remove(groupId);
         let group = this.addNode(pos.x, pos.y, label, color, undefined, groupId);
 
         for (let node of nodes) {
