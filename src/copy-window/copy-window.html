@@ -1,0 +1,110 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../dragdrop-window/dragdrop-window.html">
+<link rel="import" href="../action-window/action-window.html">
+
+<dom-module id="copy-window">
+    <template include="shared-styles">
+        <style>
+             :host {
+                display: block
+            }
+
+            paper-button {
+                color: white;
+                background-color: var(--paper-blue-500);
+                margin: 5px;
+            }
+
+            #data {
+                background: white;
+                height: 100px;
+                overflow-y: auto;
+                padding: 5px;
+                margin: 5px;
+                border-radius: 3px;
+                width: 90%;
+            }
+
+            #actionWindow {
+                --action-window-mixin: {
+                    width: 400px;
+                }
+            }
+        </style>
+
+        <dragdrop-window top="100" left="100">
+            <action-window id="actionWindow" closed close-button>
+                <div slot="title">[[title]]</div>
+                <div class="horizontal center-justified layout">
+                    <textarea readonly id="data"></textarea>
+                </div>
+                <div class="horizontal center center-justified layout">
+                    <paper-button raised on-click="copy">Copy</paper-button>
+                </div>
+            </action-window>
+        </dragdrop-window>
+
+    </template>
+
+    <script>
+        /**
+         * `copy-window` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class CopyWindow extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'copy-window';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    title: String,
+                    text: {
+                        type: String,
+                        observer: '_textChanged'
+                    }
+                };
+            }
+
+            /**
+             * Instance of the element is created/upgraded. Use: initializing state,
+             * set up event listeners, create shadow dom.
+             * @constructor
+             */
+            constructor() {
+                super();
+            }
+
+            _textChanged() {
+                this.$.data.innerHTML = this.text;
+            }
+
+            open() {
+                this.$.actionWindow.open();
+            }
+
+            close() {
+                this.$.actionWindow.close();
+            }
+
+            copy() {
+                this.$.data.select();
+                document.execCommand('copy');
+            }
+
+        }
+
+        window.customElements.define(CopyWindow.is, CopyWindow);
+    </script>
+</dom-module>

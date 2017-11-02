@@ -6,6 +6,7 @@
 <link rel="import" href="../legend-element/legend-element.html">
 <link rel="import" href="../graph-loader/graph-loader.html">
 <link rel="import" href="../option-window/option-window.html">
+<link rel="import" href="../copy-window/copy-window.html">
 
 <dom-module id="graph-app">
   <template>
@@ -23,6 +24,8 @@
       }
     </style>
 
+
+
     <legend-element save-position id="legend" legends="{{legends}}"></legend-element>
     <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
     <option-window id="optionsWindow" save-position></option-window>
@@ -31,6 +34,8 @@
     </node-dialog>
     <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge" legends="[[legends]]"></edge-dialog>
     <group-dialog id="groupDialog" on-add-group="_addGroup"></group-dialog>
+
+    <copy-window id="copyWindow" title="Copy URL"></copy-window>
 
 
     <div id="graph">
@@ -185,7 +190,7 @@
           text: 'Export as URL',
           background: 'var(--paper-amber-500)',
           color: 'white',
-          action: this.exportURL,
+          action: this.exportURL.bind(this),
           tooltip: 'Show/hide legends list'
         }];
 
@@ -245,6 +250,8 @@
       exportURL() {
         let location = window.location.origin;
         let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
+        this.$.copyWindow.text = graphUrl;
+        this.$.copyWindow.open();
       }
     }
 
