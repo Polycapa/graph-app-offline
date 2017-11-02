@@ -17,6 +17,12 @@
                 display: block
             }
 
+            #actionWindow {
+                --action-window-mixin: {
+                    max-width: 400px;
+                }
+            }
+
             paper-button {
                 margin: 5px;
                 text-transform: capitalize;
@@ -37,25 +43,28 @@
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
             <action-window id="actionWindow" reduce>
-                <div slot="title">Actions</div>
+                <div slot="title">Graph Creator</div>
 
                 <div class="vertical layout">
                     <template is="dom-repeat" items= {{options}} index-as="groupIndex" as="options">
 
                         <div class="group-title">
-                            [[options.title]]</div>
-                        <template is="dom-repeat" items= {{options.group}} as=item index-as=index>
-                            <paper-button data-group$="[[groupIndex]]" raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
-                                {{item.text}}
+                            [[options.title]]
+                        </div>
+                        <div class="horizontal around-justified wrap layout">
+                            <template is="dom-repeat" items= {{options.group}} as=item index-as=index>
+                                <paper-button data-group$="[[groupIndex]]" raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
+                                    {{item.text}}
 
-                                <template is="dom-if" if= {{item.tooltip}}>
-                                    <paper-tooltip position="right">
-                                        [[item.tooltip]]
-                                    </paper-tooltip>
-                                </template>
-                            </paper-button>
+                                    <template is="dom-if" if= {{item.tooltip}}>
+                                        <paper-tooltip position="right">
+                                            [[item.tooltip]]
+                                        </paper-tooltip>
+                                    </template>
+                                </paper-button>
 
-                        </template>
+                            </template>
+                        </div>
 
 
                     </template>
