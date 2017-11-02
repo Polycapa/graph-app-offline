@@ -135,6 +135,14 @@
                 this.$.window.classList.remove('reduced');
             }
 
+            toggle() {
+                if (this.closed) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            }
+
             toggleExpand(e) {
                 this.$.window.classList.toggle('reduced');
                 e.target.icon = this.$.window.classList.contains('reduced') ? 'expand-more' : 'expand-less';
