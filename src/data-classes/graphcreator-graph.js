@@ -324,6 +324,11 @@ class GraphCreatorGraph {
         }
     }
 
+    loadData(data) {
+        this.json = data;
+        this.loadGroups(data);
+    }
+
     //endregion
 
     //endregion    

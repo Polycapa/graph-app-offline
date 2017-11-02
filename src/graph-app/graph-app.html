@@ -65,6 +65,19 @@
 
         this._initGraphCallbacks();
         this._initOptions();
+
+        let url = new URL(window.location.href);
+        let graphData = url.searchParams.get('graph');
+        if (graphData) {
+          graphData = decodeURIComponent(graphData);
+          // console.log(graphData);
+          try {
+            graphData = JSON.parse(graphData);
+            this.graph.loadData(graphData);
+          } catch (e) {
+            console.error(e);
+          }
+        }
       }
 
       _resetGraph(e) {
@@ -167,6 +180,16 @@
           background: 'var(--paper-amber-500)',
           color: 'white',
           action: this.$.legend.toggle.bind(this.$.legend),
+          tooltip: 'Show/hide legends list'
+        }, {
+          text: 'Export as URL',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: () => {
+            let location = window.location.origin;
+            let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
+            window.location.href = graphUrl;
+          },
           tooltip: 'Show/hide legends list'
         }];
 
