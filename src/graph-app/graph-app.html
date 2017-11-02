@@ -63,7 +63,10 @@
         }
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
+        this.graph.onNodeUnselection = this.$.nodeDialog.close.bind(this.$.nodeDialog);
+
         this.graph.onEdgeSelection = this.$.edgeDialog.edit.bind(this.$.edgeDialog);
+        this.graph.onEdgeUnselection = this.$.edgeDialog.close.bind(this.$.edgeDialog);
       }
 
       _resetGraph(e) {

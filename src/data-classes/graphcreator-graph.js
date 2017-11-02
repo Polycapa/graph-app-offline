@@ -155,6 +155,20 @@ class GraphCreatorGraph {
         this._onNodeSelection = value;
     }
 
+    get onNodeUnselection() {
+        return this._onNodeUnselection || (_ => {});
+    }
+
+    set onNodeUnselection(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._onNodeUnselection = value;
+    }
+
+
+
     get beforeEdgeCreation() {
         return this._beforeEdgeCreation || (_ => {});
     }
@@ -177,6 +191,18 @@ class GraphCreatorGraph {
         }
 
         this._onEdgeSelection = value;
+    }
+
+    get onEdgeUnselection() {
+        return this._onEdgeUnselection || (_ => {});
+    }
+
+    set onEdgeUnselection(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._onEdgeUnselection = value;
     }
 
     get json() {
@@ -255,6 +281,7 @@ class GraphCreatorGraph {
 
     unselectAllNodes() {
         this.selectedNodes.forEach(node => node.removeClass('selected'));
+        this.onNodeUnselection();
     }
 
     cyToNode(cyNode) {
@@ -319,6 +346,7 @@ class GraphCreatorGraph {
 
     unselectAllEdges() {
         this.selectedEdges.forEach(edge => edge.removeClass('selected'));
+        this.onEdgeUnselection();
     }
 
     cyToEdge(cyEdge) {
@@ -430,6 +458,8 @@ class GraphCreatorGraph {
 
         if (node.hasClass('selected')) {
             this.onNodeSelection(this.cyToNode(node), mousePosition);
+        } else {
+            this.onNodeUnselection(this.cyToNode(node), mousePosition);
         }
 
         if (this.selectedNodes.length === 2) {
@@ -452,6 +482,8 @@ class GraphCreatorGraph {
             let target = new GraphCreatorNode(targetData.id, targetData.x, targetData.y);
 
             this.beforeEdgeCreation(source, target, mousePosition);
+        } else {
+            this.onEdgeUnselection();
         }
     }
 
@@ -463,6 +495,7 @@ class GraphCreatorGraph {
         // Unselect all edges
         this.selectedEdges.forEach(edge => {
             edge.removeClass('selected');
+            this.onEdgeUnselection(this.cyToEdge(edge), mousePosition);
         });
 
 
