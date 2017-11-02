@@ -27,6 +27,7 @@
                 border: 1px solid var(--paper-grey-300);
                 border-radius: 5px;
                 @apply(--shadow-elevation-2dp);
+                transition: all 0.3s ease-in;
             }
 
             .title {
@@ -35,6 +36,15 @@
                 margin-left: 10px;
                 padding: 5px;
                 cursor: move;
+            }
+
+            .reduced {
+                min-width: 50px!important;
+            }
+
+            .reduced .actions,
+            .reduced .slot {
+                display: none;
             }
         </style>
 
@@ -48,11 +58,14 @@
                         <template is="dom-repeat" items="{{actions}}">
                             <paper-icon-button icon="{{item.icon}}" on-click="itemAction"></paper-icon-button>
                         </template>
-                        <paper-icon-button icon="close" on-click="close" hidden$="{{!closeButton}}"></paper-icon-button>
                     </div>
+                    <paper-icon-button icon="expand-less" on-click="toggleExpand" hidden$="{{!reduce}}"></paper-icon-button>
+                    <paper-icon-button icon="close" on-click="close" hidden$="{{!closeButton}}"></paper-icon-button>
                 </div>
             </div>
-            <slot></slot>
+            <div class="slot">
+                <slot></slot>
+            </div>
         </div>
 
     </template>
@@ -92,6 +105,10 @@
                     closed: {
                         type: Boolean,
                         value: false
+                    },
+                    reduce: {
+                        type: Boolean,
+                        value: false
                     }
                 };
             }
@@ -115,6 +132,12 @@
 
             close() {
                 this.closed = true;
+                this.$.window.classList.remove('reduced');
+            }
+
+            toggleExpand(e) {
+                this.$.window.classList.toggle('reduced');
+                e.target.icon = this.$.window.classList.contains('reduced') ? 'expand-more' : 'expand-less';
             }
 
         }
