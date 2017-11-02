@@ -471,6 +471,24 @@ class GraphCreatorGraph {
 
         return edge;
     }
+
+    addGroup(nodesId) {
+        if (nodesId.length === 0) {
+            return;
+        }
+
+        let nodes = [];
+        for (let id of nodesId) {
+            nodes.push(this.getNode(id));
+        }
+
+        let group = this.addNode(nodes[0].x, nodes[0].y);
+
+        for (let node of nodes) {
+            this.remove(node.fullId);
+            this.addNode(node.x, node.y, node.label, node.color, group.fullId);
+        }
+    }
     //endregion
 
     //region Graph deletion
