@@ -35,7 +35,7 @@ Functionalities
 - [x] Multiple graph
 - [ ] Realtime data update
 - [x] Zoom
-- [ ] Groups
+- [x] Groups
 - [x] Reduce window
 - [x] Legend autocomplete (autocomplete edge using legend)
 - [x] Buttons (instead of clicking to add elements, click on button to select insertion mode)
