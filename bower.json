@@ -15,7 +15,9 @@
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
     "iron-collapse": "PolymerElements/iron-collapse#^2.0.0",
     "paper-autocomplete": "ellipticaljs/paper-autocomplete#^3.4.0",
-    "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.1"
+    "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.1",
+    "paper-item": "PolymerElements/paper-item#^2.0.0",
+    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
