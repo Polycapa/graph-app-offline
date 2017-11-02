@@ -92,7 +92,20 @@
           text: 'Center graph',
           background: 'var(--paper-blue-500)',
           color: 'white',
-          action: this.graph.center.bind(this.graph)
+          action: this.graph.center.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Toggle graphs list',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: this.$.loader.toggle.bind(this.$.loader),
+          tooltip: 'Show/hide graphs list'
+        }, {
+          text: 'Toggle legends list',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: this.$.legend.toggle.bind(this.$.legend),
+          tooltip: 'Show/hide legends list'
         }];
 
         this.$.optionsWindow.options = options;
