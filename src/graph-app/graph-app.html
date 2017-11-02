@@ -2,6 +2,7 @@
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../node-dialog/node-dialog.html">
 <link rel="import" href="../edge-dialog/edge-dialog.html">
+<link rel="import" href="../group-dialog/group-dialog.html">
 <link rel="import" href="../legend-element/legend-element.html">
 <link rel="import" href="../graph-loader/graph-loader.html">
 <link rel="import" href="../option-window/option-window.html">
@@ -29,6 +30,7 @@
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode">
     </node-dialog>
     <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge" legends="[[legends]]"></edge-dialog>
+    <group-dialog id="groupDialog" on-add-group="_addGroup"></group-dialog>
 
 
     <div id="graph">
@@ -81,6 +83,7 @@
           this.$.nodeDialog.close();
           this.$.edgeDialog.open(source, target, mousePosition);
         }
+        this.graph.beforeGroupCreation = this.$.groupDialog.open.bind(this.$.groupDialog);
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
         this.graph.onNodeUnselection = this.$.nodeDialog.close.bind(this.$.nodeDialog);
@@ -200,6 +203,12 @@
         let data = e.detail;
         this.graph.updateEdgeData(data.id, data);
         this.graph.unselectAllEdges();
+      }
+
+      _addGroup(e) {
+        let data = e.detail;
+        console.log(data);
+        this.graph.addGroup(data.nodesId, data.label, data.color);
       }
     }
 
