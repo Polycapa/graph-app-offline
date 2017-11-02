@@ -3,34 +3,13 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
+<link rel="import" href="../action-window/action-window.html">
 
 <dom-module id="graph-loader">
     <template>
         <style include="shared-styles">
              :host {
                 display: block
-            }
-
-            #legend {
-                background: rgba(240, 239, 239, 0.9);
-                position: fixed;
-            }
-
-            @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
-                #legend {
-                    background: rgba(240, 239, 239, 0.5);
-                    -webkit-backdrop-filter: blur(5px);
-                    backdrop-filter: blur(5px);
-                }
-            }
-
-            #legend {
-                width: 300px;
-                border: 1px solid var(--paper-grey-300);
-                border-radius: 5px;
-                padding: 5px;
-                cursor: move;
-                @apply(--shadow-elevation-2dp);
             }
 
             .legend {
@@ -40,12 +19,6 @@
                 margin: 5px;
                 cursor: pointer;
                 border-radius: 3px;
-            }
-
-            .title {
-                font-weight: bold;
-                font-size: 17px;
-                margin-left: 10px;
             }
 
             label {
@@ -76,11 +49,9 @@
         </style>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
-            <div id="legend" class="vertical layout">
-                <div class="horizontal center end-justified layout">
-                    <div class="flex title">Graphs</div>
-                    <paper-icon-button icon="add" on-click="showInputs" id="inputsIcon"></paper-icon-button>
-                </div>
+            <action-window id="actionWindow">
+
+                <div slot="title">Graphs</div>
                 <iron-collapse id="inputs">
                     <div class="horizontal center layout input">
                         <label for="label">Label</label>
@@ -99,7 +70,7 @@
                         </div>
                     </template>
                 </iron-collapse>
-            </div>
+            </action-window>
         </dragdrop-window>
 
     </template>
@@ -178,6 +149,11 @@
                 if (this.storageKey) {
                     this.loadFromStorage();
                 }
+
+                this.$.actionWindow.actions = [{
+                    icon: 'add',
+                    action: this.showInputs.bind(this)
+                }];
             }
 
             _savePosition(e) {
@@ -193,11 +169,13 @@
                 this.$.inputs.toggle();
                 this.$.graphs.toggle();
 
-                this.$.inputsIcon.icon = this.$.inputs.opened ? 'save' : 'add';
-
                 if (this.$.inputs.opened) {
                     this.$.labelInput.value = '';
                     this.$.colorInput.value = '#ffffff';
+                    this.$.actionWindow.actions = [{
+                        icon: 'save',
+                        action: this.showInputs.bind(this)
+                    }];
                 } else {
                     let label = this.$.labelInput.value;
                     if (!label) {
@@ -214,6 +192,11 @@
                     this.emit('add-graph', graph);
 
                     this.saveToStorage();
+
+                    this.$.actionWindow.actions = [{
+                        icon: 'add',
+                        action: this.showInputs.bind(this)
+                    }];
                 }
             }
 
