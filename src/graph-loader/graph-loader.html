@@ -226,6 +226,14 @@
                 this.splice('graphs', index, 1);
 
                 localStorage.removeItem(graph.key);
+                localStorage.removeItem(`${graph.key}-legend`);
+
+                for (var i = 0; i < this.graphs.length; i++) {
+                    let item = this.graphs[i];
+                    if (item.key === graph.key) {
+                        this.splice('graphs', i, 1);
+                    }
+                }
                 this.saveToStorage();
 
                 this.emit('delete-graph', graph);
