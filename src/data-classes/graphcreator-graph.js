@@ -425,11 +425,14 @@ class GraphCreatorGraph {
 
     getEdgesWithNode(nodeId) {
         let edges = [];
-        for (let edge of this.edges) {
-            edge = this.cyToEdge(edge);
 
-            if (edge.source.fullId === nodeId || edge.target.fullId === nodeId) {
-                edges.push(edge);
+        if (this.edges && this.edges.length) {
+            for (let edge of this.edges) {
+                edge = this.cyToEdge(edge);
+
+                if (edge.source.fullId === nodeId || edge.target.fullId === nodeId) {
+                    edges.push(edge);
+                }
             }
         }
 
@@ -510,10 +513,14 @@ class GraphCreatorGraph {
         return edge;
     }
 
-    addGroup(nodesId) {
+    addGroup(nodesId, label, color) {
         if (nodesId.length === 0) {
             return;
         }
+
+
+        label = label || '';
+        color = color || this.nodeColor;
 
         let nodes = [];
         let edges = [];
@@ -522,6 +529,8 @@ class GraphCreatorGraph {
             x: undefined,
             y: undefined
         };
+
+        let groupId = this.nextNodeId;
 
         for (let id of nodesId) {
             let node = this.getNode(id)
@@ -537,7 +546,9 @@ class GraphCreatorGraph {
             this.remove(node.fullId);
         }
 
-        let group = this.addNode(pos.x, pos.y);
+        console.log(label, color);
+
+        let group = this.addNode(pos.x, pos.y, label, color, undefined, groupId);
 
         for (let node of nodes) {
             this.addNode(node.x, node.y, node.label, node.color, group.fullId, node.fullId);
@@ -616,7 +627,12 @@ class GraphCreatorGraph {
                 }
                 break;
             case 'add-group':
-
+                if (this.selectedNodes.length < 2) {
+                    return;
+                }
+                let selectedNodes = [];
+                this.selectedNodes.forEach(selected => selectedNodes.push(this.cyToNode(selected)));
+                this.beforeGroupCreation(selectedNodes, mousePosition);
                 break;
             case 'delete':
                 this.remove(this.getNodeData(node).id);
@@ -627,7 +643,6 @@ class GraphCreatorGraph {
     }
 
     _edgeClick(e) {
-        console.log('edge tap');
         if (this.mode !== 'select' && this.mode !== 'delete') {
             return;
         }
