@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 
-<dom-module id="legend-element">
+<dom-module id="graph-loader">
     <template>
         <style include="shared-styles">
              :host {
@@ -35,7 +35,7 @@
 
             .legend {
                 text-align: center;
-                color: white;
+                color: black;
                 padding: 5px;
                 margin: 5px;
                 cursor: pointer;
@@ -68,12 +68,16 @@
             .legend:hover .deleteIcon {
                 visibility: visible;
             }
+
+            .selected {
+                border: 3px solid black;
+            }
         </style>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
             <div id="legend" class="vertical layout">
                 <div class="horizontal center end-justified layout">
-                    <div class="flex title">Legend</div>
+                    <div class="flex title">Graphs</div>
                     <paper-icon-button icon="add" on-click="showInputs" id="inputsIcon"></paper-icon-button>
                 </div>
                 <iron-collapse id="inputs">
@@ -82,15 +86,15 @@
                         <input type="text" name="label" id="labelInput" class="flex">
                     </div>
                     <div class="horizontal center layout input">
-                        <label for="color">Color</label>
-                        <input type="color" name="color" id="colorInput" placeholder="Color" value="#ff0000" class="flex">
+                        <label for="color">Background</label>
+                        <input type="color" name="color" id="colorInput" value="#ffffff" class="flex">
                     </div>
                 </iron-collapse>
-                <iron-collapse id="legends" opened>
-                    <template is="dom-repeat" items="{{legends}}">
-                        <div class="legend horizontal center end-justified layout" style$="background-color:{{item.color}}">
+                <iron-collapse id="graphs" opened>
+                    <template is="dom-repeat" items="{{graphs}}">
+                        <div on-click="selectGraph" class="legend horizontal center end-justified layout" style$="background-color:{{item.background}}">
                             <div class="flex">{{item.label}}</div>
-                            <paper-icon-button icon="delete" on-click="deleteLegend" class="deleteIcon"></paper-icon-button>
+                            <paper-icon-button icon="delete" on-click="deleteGraph" class="deleteIcon"></paper-icon-button>
                         </div>
                     </template>
                 </iron-collapse>
@@ -101,19 +105,19 @@
 
     <script>
         /**
-         * `legend-element` Description
+         * `graph-loader` Description
          *
          * @summary ShortDescription.
          * @customElement
          * @polymer
          * @extends {Polymer.Element}
          */
-        class LegendElement extends Polymer.Element {
+        class GraphLoader extends Polymer.Element {
             /**
              * String providing the tag name to register the element under.
              */
             static get is() {
-                return 'legend-element';
+                return 'graph-loader';
             }
 
             /**
@@ -137,7 +141,7 @@
                         type: Number,
                         value: 100
                     },
-                    legends: {
+                    graphs: {
                         type: Object,
                         value: () => {
                             return []
@@ -162,7 +166,7 @@
                 super.ready();
 
                 if (this.savePosition) {
-                    let position = localStorage.getItem('graph-legend-position');
+                    let position = localStorage.getItem('graph-list-position');
                     if (position) {
                         position = JSON.parse(position);
                         this.top = position.y;
@@ -180,37 +184,88 @@
                 this.left = e.detail.x;
 
                 if (this.savePosition) {
-                    localStorage.setItem('graph-legend-position', JSON.stringify(e.detail));
+                    localStorage.setItem('graph-list-position', JSON.stringify(e.detail));
                 }
             }
 
             showInputs() {
                 this.$.inputs.toggle();
-                this.$.legends.toggle();
+                this.$.graphs.toggle();
 
                 this.$.inputsIcon.icon = this.$.inputs.opened ? 'save' : 'add';
 
                 if (this.$.inputs.opened) {
                     this.$.labelInput.value = '';
-                    this.$.colorInput.value = '#ff0000';
+                    this.$.colorInput.value = '#ffffff';
                 } else {
-                    this.push('legends', {
+                    let label = this.$.labelInput.value;
+                    if (!label) {
+                        return;
+                    }
+                    let key = label.toLowerCase().replace(/ /g, '-');
+                    let graph = {
                         label: this.$.labelInput.value,
-                        color: this.$.colorInput.value
-                    });
+                        background: this.$.colorInput.value,
+                        key: key
+                    };
+
+                    this.push('graphs', graph);
+                    this.emit('add-graph', graph);
 
                     this.saveToStorage();
                 }
             }
 
-            deleteLegend(e) {
+            deleteGraph(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
                 let index = e.model.index;
-                this.splice('legends', index, 1);
+                let graph = this.graphs[index];
+
+                this.splice('graphs', index, 1);
+
+                localStorage.removeItem(graph.key);
+                this.saveToStorage();
+
+                this.emit('delete-graph', graph);
+            }
+
+            selectGraph(e) {
+                let target = e.target;
+                let graph = this.graphs[e.model.index];
+
+                while (!target.classList.contains('legend') && target.nodeName !== 'HTML') {
+                    target = target.parentNode;
+                }
+
+                if (target.nodeName === 'HTML') {
+                    return;
+                }
+
+                let selected = target.classList.contains('selected');
+
+                this.unselectAll();
+
+                if (selected) {
+                    this.emit('delete-graph', graph);
+                } else {
+                    this.emit('select-graph', graph);
+                    target.classList.add('selected');
+                }
+
+            }
+
+            unselectAll() {
+                let legendsDiv = this.shadowRoot.querySelectorAll('.selected');
+                for (let div of legendsDiv) {
+                    div.classList.remove('selected');
+                }
             }
 
             saveToStorage() {
                 if (this.storageKey) {
-                    localStorage.setItem(this.storageKey, JSON.stringify(this.legends));
+                    localStorage.setItem(this.storageKey, JSON.stringify(this.graphs));
                 }
             }
 
@@ -219,18 +274,23 @@
                     let data = localStorage.getItem(this.storageKey);
                     if (data) {
                         try {
-                            this.legends = JSON.parse(data);
+                            this.graphs = JSON.parse(data);
                         } catch (e) {
                             console.error(e);
                         }
-                    } else {
-                        this.legends = [];
                     }
                 }
             }
 
+            emit(eventName, data) {
+                let event = new CustomEvent(eventName, {
+                    detail: data
+                });
+                this.dispatchEvent(event);
+            }
+
         }
 
-        window.customElements.define(LegendElement.is, LegendElement);
+        window.customElements.define(GraphLoader.is, GraphLoader);
     </script>
 </dom-module>

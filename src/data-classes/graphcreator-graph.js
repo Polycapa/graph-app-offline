@@ -1,13 +1,34 @@
 class GraphCreatorGraph {
 
+    //region Init
+
     // Init graph with cytoscape library
     constructor(cytoscape, container, style, localStorageKey) {
         if (!cytoscape && !container) {
             throw new Error('Missing parameters');
         }
 
-        this.cy = cytoscape({
-            container: container,
+        this.cytoscape = cytoscape;
+        this.container = container;
+
+        this.init();
+
+        if (style) {
+            this.nodeColor = style.nodeColor;
+            this.edgeColor = style.edgeColor;
+            this.edgeArrowColor = style.edgeArrowColor;
+        }
+
+        this.localStorageKey = localStorageKey;
+
+        if (this.localStorageKey) {
+            this.loadFromStorage();
+        }
+    }
+
+    init() {
+        this.cy = this.cytoscape({
+            container: this.container,
             style: [{
                 selector: 'node',
                 style: {
@@ -49,19 +70,9 @@ class GraphCreatorGraph {
         this.cy.on('tap', 'node', this._nodeClick.bind(this));
         this.cy.on('tap', 'edge', this._edgeClick.bind(this));
         this.cy.on('cxttap', this._rightClick.bind(this));
-
-        if (style) {
-            this.nodeColor = style.nodeColor;
-            this.edgeColor = style.edgeColor;
-            this.edgeArrowColor = style.edgeArrowColor;
-        }
-
-        this.localStorageKey = localStorageKey;
-
-        if (this.localStorageKey) {
-            this.loadFromStorage();
-        }
     }
+
+    //endregion
 
     //region Style
     get nodeColor() {
@@ -182,7 +193,7 @@ class GraphCreatorGraph {
             if (data) {
                 this.json = JSON.parse(data);
             } else {
-                console.info('No data in localStorage');
+                this.init();
             }
         } else {
             console.error('Missing localStorage key to retrieve data');

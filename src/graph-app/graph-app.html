@@ -3,6 +3,7 @@
 <link rel="import" href="../node-dialog/node-dialog.html">
 <link rel="import" href="../edge-dialog/edge-dialog.html">
 <link rel="import" href="../legend-element/legend-element.html">
+<link rel="import" href="../graph-loader/graph-loader.html">
 
 <dom-module id="graph-app">
   <template>
@@ -21,7 +22,8 @@
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode"></node-dialog>
     <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge"></edge-dialog>
 
-    <legend-element save-position storage-key="graph-legend"></legend-element>
+    <legend-element save-position id="legend"></legend-element>
+    <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
     <div id="graph">
 
     </div>
@@ -50,7 +52,7 @@
 
       ready() {
         super.ready();
-        this.graph = new GraphCreatorGraph(cytoscape, this.$.graph, {}, 'graph-data');
+        this.graph = new GraphCreatorGraph(cytoscape, this.$.graph);
         // Fix from Chrome : if not done, elements added after disappear
         this.$.graph.style.backgroundColor = 'white';
 
@@ -62,6 +64,22 @@
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
         this.graph.onEdgeSelection = this.$.edgeDialog.edit.bind(this.$.edgeDialog);
+      }
+
+      _resetGraph(e) {
+        if (e.detail.key === this.graph.localStorageKey) {
+          this.graph.localStorageKey = '';
+          this.graph.init();
+
+        }
+      }
+
+      _changeGraph(e) {
+        this.graph.localStorageKey = e.detail.key;
+        this.graph.loadFromStorage();
+
+        this.$.legend.storageKey = e.detail.key + '-legend';
+        this.$.legend.loadFromStorage();
       }
 
       _addNode(e) {
