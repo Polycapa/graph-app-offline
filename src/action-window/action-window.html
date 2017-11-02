@@ -38,7 +38,7 @@
             }
         </style>
 
-        <div id="window">
+        <div id="window" hidden$="{{closed}}">
             <div class="title">
                 <div class="horizontal center end-justified layout">
                     <div class="flex">
@@ -48,6 +48,7 @@
                         <template is="dom-repeat" items="{{actions}}">
                             <paper-icon-button icon="{{item.icon}}" on-click="itemAction"></paper-icon-button>
                         </template>
+                        <paper-icon-button icon="close" on-click="close" hidden$="{{!closeButton}}"></paper-icon-button>
                     </div>
                 </div>
             </div>
@@ -83,6 +84,14 @@
                         value: () => {
                             return []
                         }
+                    },
+                    closeButton: {
+                        type: Boolean,
+                        value: false
+                    },
+                    closed: {
+                        type: Boolean,
+                        value: false
                     }
                 };
             }
@@ -98,6 +107,14 @@
 
             itemAction(e) {
                 this.actions[e.model.index].action();
+            }
+
+            open() {
+                this.closed = false;
+            }
+
+            close() {
+                this.closed = true;
             }
 
         }
