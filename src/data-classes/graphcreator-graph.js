@@ -86,7 +86,7 @@ class GraphCreatorGraph {
         this.cy.on('tap', 'node', this._nodeClick.bind(this));
         this.cy.on('tap', 'edge', this._edgeClick.bind(this));
         this.cy.on('tap', this._globalTap.bind(this));
-        this.cy.on('drag', 'node', this._nodeMoved.bind(this))
+        this.cy.on('position', 'node', this._nodeMoved.bind(this))
     }
 
     //endregion
@@ -732,6 +732,10 @@ class GraphCreatorGraph {
     }
 
     _nodeMoved(e) {
+        let node = this.cyToNode(e.target);
+        let position = e.target.position();
+        this.updateNodeProperty(node.fullId, 'x', position.x);
+        this.updateNodeProperty(node.fullId, 'y', position.y);
         this.saveToStorage();
     }
 
