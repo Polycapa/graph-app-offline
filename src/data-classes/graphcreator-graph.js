@@ -492,16 +492,29 @@ class GraphCreatorGraph {
 
         let nodes = [];
         let edges = [];
+
+        let pos = {
+            x: undefined,
+            y: undefined
+        };
+
         for (let id of nodesId) {
-            nodes.push(this.getNode(id));
+            let node = this.getNode(id)
+            nodes.push(node);
             let nodeEdges = this.getEdgesWithNode(id);
             edges = edges.concat(nodeEdges);
+
+            if (!pos.x && !pos.y) {
+                pos.x = node.x;
+                pos.y = node.y;
+            }
+
+            this.remove(node.fullId);
         }
 
-        let group = this.addNode(nodes[0].x, nodes[0].y);
+        let group = this.addNode(pos.x, pos.y);
 
         for (let node of nodes) {
-            this.remove(node.fullId);
             this.addNode(node.x, node.y, node.label, node.color, group.fullId, node.fullId);
         }
 
