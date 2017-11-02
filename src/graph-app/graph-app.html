@@ -90,13 +90,16 @@
       }
 
       _initOptions() {
-        let options = [{
+
+        let actions = [{
           text: 'Center graph',
           background: 'var(--paper-blue-500)',
           color: 'white',
           action: this.graph.center.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
-        }, {
+        }];
+
+        let options = [{
           text: 'Toggle graphs list',
           background: 'var(--paper-amber-500)',
           color: 'white',
@@ -110,7 +113,13 @@
           tooltip: 'Show/hide legends list'
         }];
 
-        this.$.optionsWindow.options = options;
+        this.$.optionsWindow.options = [{
+          title: 'Actions',
+          group: actions
+        }, {
+          title: 'Options',
+          group: options
+        }];
       }
 
       _changeGraph(e) {
