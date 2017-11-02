@@ -33,6 +33,8 @@ Functionalities
 - [ ] File export
 - [ ] Read only URL (export a graph into an url)
 - [x] Multiple graph
+- [ ] Realtime data update
+- [ ] Zoom
 - [ ] Groups
 - [ ] Reduce window
 - [ ] Legend autocomplete (autocomplete edge using legend)
