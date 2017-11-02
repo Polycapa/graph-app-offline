@@ -473,7 +473,7 @@ class GraphCreatorGraph {
 
     _nodeClick(e) {
 
-        if (this.mode !== 'select' && this.mode !== 'add-edge') {
+        if (this.mode !== 'select' && this.mode !== 'add-edge' && this.mode != 'delete') {
             return;
         }
 
@@ -522,6 +522,9 @@ class GraphCreatorGraph {
                     this.onEdgeUnselection();
                 }
                 break;
+            case 'delete':
+                this.remove(this.getNodeData(node).id);
+                break;
             default:
 
         }
@@ -551,7 +554,7 @@ class GraphCreatorGraph {
                 }
                 break;
             case 'delete':
-                this.remove(this.getEdgeData(target).id);
+                this.remove(this.getEdgeData(clickedEdge).id);
                 break;
             default:
 
@@ -569,9 +572,6 @@ class GraphCreatorGraph {
             if (this.mode === 'add-node') {
                 this.beforeNodeCreation(position, mousePosition);
             }
-        } else if (target.isNode() && this.mode === 'delete') {
-            // Remove node
-            this.remove(this.getNodeData(target).id);
         }
     }
 
