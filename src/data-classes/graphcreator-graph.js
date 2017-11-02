@@ -39,6 +39,18 @@ class GraphCreatorGraph {
                     'font-size': 10
                 }
             }, {
+                selector: '$node > node',
+                css: {
+                    'padding-top': '10px',
+                    'padding-left': '10px',
+                    'padding-bottom': '10px',
+                    'padding-right': '10px',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'background-color': 'data(color)',
+                    'font-size': 15
+                }
+            }, {
                 selector: 'edge',
                 style: {
                     'width': 3,
