@@ -228,6 +228,8 @@ class GraphCreatorGraph {
 
     saveToStorage() {
         if (this.localStorageKey) {
+            this.unselectAllNodes();
+            this.unselectAllEdges();
             localStorage.setItem(this.localStorageKey, JSON.stringify(this.json));
         } else {
             console.error('Missing localStorage key to save data');
@@ -271,6 +273,7 @@ class GraphCreatorGraph {
 
     updateNodeProperty(nodeId, property, value) {
         this.cy.$(`#${nodeId}`).data(property, value);
+        this.saveToStorage();
     }
 
     updateNodeData(nodeId, data) {
@@ -336,6 +339,8 @@ class GraphCreatorGraph {
                 'mid-target-arrow-shape': edge.oriented ? 'triangle' : 'none'
             })
         }
+
+        this.saveToStorage();
     }
 
     updateEdgeData(edgeId, data) {
