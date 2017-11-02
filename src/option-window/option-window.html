@@ -19,7 +19,7 @@
 
             #actionWindow {
                 --action-window-mixin: {
-                    max-width: 400px;
+                    max-width: 300px;
                 }
             }
 
@@ -39,13 +39,17 @@
                 padding: 3px 3px 5px 10px;
                 color: var(--paper-grey-600);
             }
+
+            .selected {
+                border: 3px solid black;
+            }
         </style>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
             <action-window id="actionWindow" reduce>
                 <div slot="title">Graph Creator</div>
 
-                <div class="vertical layout">
+                <div class="vertical layout options">
                     <template is="dom-repeat" items= {{options}} index-as="groupIndex" as="options">
 
                         <div class="group-title">
@@ -56,11 +60,11 @@
                                 <paper-button data-group$="[[groupIndex]]" raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
                                     {{item.text}}
 
-                                    <template is="dom-if" if= {{item.tooltip}}>
+                                    <!-- <template is="dom-if" if= {{item.tooltip}}>
                                         <paper-tooltip position="right">
                                             [[item.tooltip]]
                                         </paper-tooltip>
-                                    </template>
+                                    </template> -->
                                 </paper-button>
 
                             </template>
@@ -154,10 +158,20 @@
 
             _doAction(e) {
                 let target = e.target;
-                let group = target.getAttribute('data-group');
-                let option = this.options[group].group[e.model.index];
+                let groupIndex = target.getAttribute('data-group');
+                let group = this.options[groupIndex];
+
+                let option = group.group[e.model.index];
                 if (option.action) {
                     option.action(e);
+                }
+
+                if (group.selectable) {
+                    let parent = target.parentNode;
+                    for (let button of parent.querySelectorAll('paper-button')) {
+                        button.classList.remove('selected');
+                    }
+                    target.classList.add('selected');
                 }
             }
 
