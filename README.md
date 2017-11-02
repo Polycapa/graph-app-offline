@@ -37,4 +37,4 @@ Functionalities
 - [ ] Zoom
 - [ ] Groups
 - [x] Reduce window
-- [ ] Legend autocomplete (autocomplete edge using legend)
+- [x] Legend autocomplete (autocomplete edge using legend)
