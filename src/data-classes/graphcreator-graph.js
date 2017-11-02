@@ -149,7 +149,7 @@ class GraphCreatorGraph {
     }
 
     set mode(value) {
-        let availableModes = ['select', 'add-node', 'add-edge', 'delete'];
+        let availableModes = ['select', 'add-node', 'add-edge', 'add-group', 'delete'];
         if (!value || availableModes.indexOf(value) === -1) {
             return;
         }
@@ -397,6 +397,19 @@ class GraphCreatorGraph {
         edge.label = data.label;
         return edge;
     }
+
+    getEdgesWithNode(nodeId) {
+        let edges = [];
+        for (let edge of this.edges) {
+            edge = this.cyToEdge(edge);
+
+            if (edge.source.fullId === nodeId || edge.target.fullId === nodeId) {
+                edges.push(edge);
+            }
+        }
+
+        return edges;
+    }
     //endregion
 
     //region Graph insertion
@@ -411,12 +424,12 @@ class GraphCreatorGraph {
      * @returns Node created
      * @memberof Graph
      */
-    addNode(x, y, label, color, parentId) {
+    addNode(x, y, label, color, parentId, nodeId) {
         // Set node data
         label = label || '';
         color = color || this.nodeColor;
 
-        var nextId = this.nextNodeId;
+        var nextId = nodeId || this.nextNodeId;
 
         let node = new GraphCreatorNode(nextId, x, y);
         node.label = label;
@@ -478,16 +491,25 @@ class GraphCreatorGraph {
         }
 
         let nodes = [];
+        let edges = [];
         for (let id of nodesId) {
             nodes.push(this.getNode(id));
+            let nodeEdges = this.getEdgesWithNode(id);
+            edges = edges.concat(nodeEdges);
         }
 
         let group = this.addNode(nodes[0].x, nodes[0].y);
 
         for (let node of nodes) {
             this.remove(node.fullId);
-            this.addNode(node.x, node.y, node.label, node.color, group.fullId);
+            this.addNode(node.x, node.y, node.label, node.color, group.fullId, node.fullId);
         }
+
+        for (let edge of edges) {
+            this.addEdge(edge.source, edge.target, edge.color, edge.label, edge.oriented, edge.arrowColor);
+        }
+
+        this.saveToStorage();
     }
     //endregion
 
@@ -506,7 +528,7 @@ class GraphCreatorGraph {
 
     _nodeClick(e) {
 
-        if (this.mode !== 'select' && this.mode !== 'add-edge' && this.mode != 'delete') {
+        if (this.mode !== 'select' && this.mode !== 'add-edge' && this.mode !== 'delete' && this.mode !== 'add-group') {
             return;
         }
 
@@ -554,6 +576,9 @@ class GraphCreatorGraph {
                 } else {
                     this.onEdgeUnselection();
                 }
+                break;
+            case 'add-group':
+                console.log(this.selectedNodes);
                 break;
             case 'delete':
                 this.remove(this.getNodeData(node).id);
