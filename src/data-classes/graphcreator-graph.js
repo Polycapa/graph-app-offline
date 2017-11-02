@@ -362,6 +362,14 @@ class GraphCreatorGraph {
         return node;
     }
 
+    deleteAllNodes() {
+        if (this.nodes) {
+            for (let node of this.nodes) {
+                this.remove(this.getNodeData(node).id);
+            }
+        }
+    }
+
     //endregion
 
     //region Edge gestion
@@ -437,6 +445,14 @@ class GraphCreatorGraph {
         }
 
         return edges;
+    }
+
+    deleteAllEdges() {
+        if (this.edges) {
+            for (let edge of this.edges) {
+                this.remove(this.getEdgeData(edge).id);
+            }
+        }
     }
     //endregion
 

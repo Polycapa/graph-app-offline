@@ -142,6 +142,18 @@
           color: 'white',
           action: this.graph.center.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Delete nodes',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: this.graph.deleteAllNodes.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Delete edges',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: this.graph.deleteAllEdges.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
         }];
 
         let options = [{
