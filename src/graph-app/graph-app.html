@@ -249,8 +249,9 @@
       }
 
       exportURL() {
-        let location = window.location.origin;
-        let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
+        let origin = window.location.origin;
+        let pathname = window.location.pathname;
+        let graphUrl = `${origin}/${pathname}?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
         this.$.copyWindow.text = graphUrl;
         this.$.copyWindow.open();
       }
