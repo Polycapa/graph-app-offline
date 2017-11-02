@@ -4,6 +4,7 @@
 <link rel="import" href="../edge-dialog/edge-dialog.html">
 <link rel="import" href="../legend-element/legend-element.html">
 <link rel="import" href="../graph-loader/graph-loader.html">
+<link rel="import" href="../option-window/option-window.html">
 
 <dom-module id="graph-app">
   <template>
@@ -26,6 +27,8 @@
 
     <legend-element save-position id="legend" legends="{{legends}}"></legend-element>
     <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
+    <option-window id="optionsWindow" save-position></option-window>
+
     <div id="graph">
 
     </div>
@@ -56,6 +59,21 @@
         super.ready();
         this.graph = new GraphCreatorGraph(cytoscape, this.$.graph);
 
+        this._initGraphCallbacks();
+        this._initOptions();
+      }
+
+      _resetGraph(e) {
+        if (e.detail.key === this.graph.localStorageKey) {
+          this.graph.localStorageKey = '';
+          this.graph.init();
+          this.updateStyles({
+            '--graph-background': 'white'
+          });
+        }
+      }
+
+      _initGraphCallbacks() {
         this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
         this.graph.beforeEdgeCreation = (source, target, mousePosition) => {
           this.$.nodeDialog.close();
@@ -69,14 +87,15 @@
         this.graph.onEdgeUnselection = this.$.edgeDialog.close.bind(this.$.edgeDialog);
       }
 
-      _resetGraph(e) {
-        if (e.detail.key === this.graph.localStorageKey) {
-          this.graph.localStorageKey = '';
-          this.graph.init();
-          this.updateStyles({
-            '--graph-background': 'white'
-          });
-        }
+      _initOptions() {
+        let options = [{
+          text: 'Center graph',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: this.graph.center.bind(this.graph)
+        }];
+
+        this.$.optionsWindow.options = options;
       }
 
       _changeGraph(e) {

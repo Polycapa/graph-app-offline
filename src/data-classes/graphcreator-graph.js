@@ -114,6 +114,17 @@ class GraphCreatorGraph {
 
     //endregion
 
+    //region Graph view
+    center() {
+        this.cy.animate({
+            fit: {
+                eles: this.cy.nodes(),
+                padding: 50
+            }
+        });
+    }
+    //endregion
+
     //region Graph data
     get nodes() {
         return this.cy.json().elements.nodes;
