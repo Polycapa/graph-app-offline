@@ -61,7 +61,7 @@
                     </template>
                 </div>
                 <iron-collapse id="inputs">
-                    <paper-input label="Label" id="labelInput" class="input" always-float-label></paper-input>
+                    <paper-input label="Label" id="labelInput" class="input" always-float-label on-keyup="_handleKeyUp"></paper-input>
                     <div class="horizontal center layout input">
                         <label for="color">Background</label>
                         <paper-swatch-picker id="colorInput"></paper-swatch-picker>
@@ -163,6 +163,13 @@
                     icon: 'add',
                     action: this.showInputs.bind(this)
                 }];
+
+            }
+
+            _handleKeyUp(e) {
+                if (e.keyCode === 13) {
+                    this.showInputs();
+                }
             }
 
             _savePosition(e) {
@@ -186,6 +193,11 @@
                         action: this.showInputs.bind(this)
                     }];
                 } else {
+                    this.$.actionWindow.actions = [{
+                        icon: 'add',
+                        action: this.showInputs.bind(this)
+                    }];
+
                     let label = this.$.labelInput.value;
                     if (!label) {
                         return;
@@ -201,11 +213,6 @@
                     this.emit('add-graph', graph);
 
                     this.saveToStorage();
-
-                    this.$.actionWindow.actions = [{
-                        icon: 'add',
-                        action: this.showInputs.bind(this)
-                    }];
                 }
             }
 

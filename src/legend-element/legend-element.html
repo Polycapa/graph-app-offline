@@ -50,7 +50,7 @@
             <action-window id="actionWindow" reduce>
                 <div slot="title">Legend</div>
                 <iron-collapse id="inputs">
-                    <paper-input label="Label" id="labelInput" class="input" always-float-label required error-message="Required">
+                    <paper-input label="Label" id="labelInput" class="input" always-float-label required error-message="Required" on-keyup="_handleKeyUp">
                     </paper-input>
                     <div class="horizontal center layout input">
                         <label for="color">Background</label>
@@ -152,6 +152,12 @@
                     icon: 'add',
                     action: this.showInputs.bind(this)
                 }];
+            }
+
+            _handleKeyUp(e) {
+                if (e.keyCode === 13) {
+                    this.showInputs();
+                }
             }
 
             _savePosition(e) {
