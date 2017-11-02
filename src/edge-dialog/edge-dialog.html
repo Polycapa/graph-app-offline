@@ -138,6 +138,16 @@
                 };
             }
 
+            ready() {
+                super.ready();
+
+                this.$.actionWindow.addEventListener('keyup', e => {
+                    if (e.keyCode === 13) {
+                        this.save();
+                    }
+                })
+            }
+
             open(source, target, mousePosition) {
                 if (!source || !target) {
                     return;

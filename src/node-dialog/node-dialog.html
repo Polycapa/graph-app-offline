@@ -110,6 +110,16 @@
                 };
             }
 
+            ready() {
+                super.ready();
+
+                this.$.actionWindow.addEventListener('keyup', e => {
+                    if (e.keyCode === 13) {
+                        this.save();
+                    }
+                })
+            }
+
             open(nodePosition, mousePosition, edit) {
                 if (!edit) {
                     this.reset();
