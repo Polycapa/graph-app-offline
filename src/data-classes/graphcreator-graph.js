@@ -155,6 +155,9 @@ class GraphCreatorGraph {
         }
 
         this._mode = value;
+
+        this.unselectAllNodes();
+        this.unselectAllEdges();
     }
     get nodes() {
         return this.cy.json().elements.nodes;
@@ -172,6 +175,7 @@ class GraphCreatorGraph {
         return this.cy.$('edge.selected');
     }
 
+    //region Node callbacks
     get beforeNodeCreation() {
         return this._beforeNodeCreation || (_ => {});
     }
@@ -208,8 +212,9 @@ class GraphCreatorGraph {
         this._onNodeUnselection = value;
     }
 
+    //endregion
 
-
+    //region Edge callbacks
     get beforeEdgeCreation() {
         return this._beforeEdgeCreation || (_ => {});
     }
@@ -246,6 +251,22 @@ class GraphCreatorGraph {
         this._onEdgeUnselection = value;
     }
 
+    //endregion
+
+    //region Group callbacks
+    get beforeGroupCreation() {
+        return this._beforeGroupCreation || (_ => {});
+    }
+
+    set beforeGroupCreation(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._beforeGroupCreation = value;
+    }
+    //endregion
+
     get json() {
         return this.cy.json();
     }
@@ -253,6 +274,8 @@ class GraphCreatorGraph {
     set json(value) {
         this.cy.json(value);
     }
+
+    //region Storage functions
 
     loadFromStorage() {
         if (this.localStorageKey) {
@@ -276,6 +299,8 @@ class GraphCreatorGraph {
             console.error('Missing localStorage key to save data');
         }
     }
+
+    //endregion
 
     //endregion    
 
@@ -547,9 +572,6 @@ class GraphCreatorGraph {
 
         let node = e.target;
         let mousePosition = e.renderedPosition;
-        if (this.selectedNodes.length >= 2 && !node.hasClass('selected')) {
-            return;
-        }
         node.toggleClass('selected');
 
 
@@ -587,11 +609,14 @@ class GraphCreatorGraph {
 
                     this.beforeEdgeCreation(source, target, mousePosition);
                 } else {
+                    if (this.selectedNodes.length > 2) {
+                        node.removeClass('selected');
+                    }
                     this.onEdgeUnselection();
                 }
                 break;
             case 'add-group':
-                console.log(this.selectedNodes);
+
                 break;
             case 'delete':
                 this.remove(this.getNodeData(node).id);
