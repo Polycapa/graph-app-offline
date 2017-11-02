@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
@@ -38,6 +39,7 @@
                 margin-bottom: 5px;
                 padding: 3px 3px 5px 10px;
                 color: var(--paper-grey-600);
+                cursor: pointer;
             }
 
             .selected {
@@ -52,25 +54,24 @@
                 <div class="vertical layout options">
                     <template is="dom-repeat" items= {{options}} index-as="groupIndex" as="options">
 
-                        <div class="group-title">
+                        <div class="group-title" on-click="_toggleCollapse" data-group$="[[groupIndex]]">
                             [[options.title]]
                         </div>
-                        <div class="horizontal around-justified wrap layout">
-                            <template is="dom-repeat" items= {{options.group}} as=item index-as=index>
-                                <paper-button data-group$="[[groupIndex]]" raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
-                                    {{item.text}}
+                        <iron-collapse opened id$="options-{{groupIndex}}">
+                            <div class="horizontal around-justified wrap layout">
+                                <template is="dom-repeat" items= {{options.group}} as=item index-as=index>
+                                    <paper-button data-group$="[[groupIndex]]" raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
+                                        {{item.text}}
 
-                                    <!-- <template is="dom-if" if= {{item.tooltip}}>
-                                        <paper-tooltip position="right">
-                                            [[item.tooltip]]
-                                        </paper-tooltip>
-                                    </template> -->
-                                </paper-button>
-
-                            </template>
-                        </div>
-
-
+                                        <!-- <template is="dom-if" if= {{item.tooltip}}>
+                                                                    <paper-tooltip position="right">
+                                                                        [[item.tooltip]]
+                                                                    </paper-tooltip>
+                                                                </template> -->
+                                    </paper-button>
+                                </template>
+                            </div>
+                        </iron-collapse>
                     </template>
                 </div>
 
@@ -173,6 +174,12 @@
                     }
                     target.classList.add('selected');
                 }
+            }
+
+            _toggleCollapse(e) {
+                let target = e.target;
+                let index = target.getAttribute('data-group');
+                target.parentNode.querySelector(`#options-${index}`).toggle();
             }
 
             emit(eventName, data) {
