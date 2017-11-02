@@ -2,6 +2,8 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
 
@@ -48,13 +50,11 @@
             <action-window id="actionWindow" reduce>
                 <div slot="title">Legend</div>
                 <iron-collapse id="inputs">
+                    <paper-input label="Label" id="labelInput" class="input" always-float-label required error-message="Required">
+                    </paper-input>
                     <div class="horizontal center layout input">
-                        <label for="label">Label</label>
-                        <input type="text" name="label" id="labelInput" class="flex">
-                    </div>
-                    <div class="horizontal center layout input">
-                        <label for="color">Color</label>
-                        <input type="color" name="color" id="colorInput" placeholder="Color" value="#ff0000" class="flex">
+                        <label for="color">Background</label>
+                        <paper-swatch-picker id="colorInput"></paper-swatch-picker>
                     </div>
                 </iron-collapse>
                 <iron-collapse id="legends" opened>
@@ -161,21 +161,22 @@
             }
 
             showInputs() {
-                this.$.inputs.toggle();
-                this.$.legends.toggle();
 
-                if (this.$.inputs.opened) {
+                if (!this.$.inputs.opened) {
                     this.$.labelInput.value = '';
-                    this.$.colorInput.value = '#ff0000';
+                    this.$.colorInput.color = '#ff0000';
 
                     this.$.actionWindow.actions = [{
                         icon: 'save',
                         action: this.showInputs.bind(this)
                     }];
                 } else {
+                    if (!this.$.labelInput.validate()) {
+                        return;
+                    }
                     this.push('legends', {
                         label: this.$.labelInput.value,
-                        color: this.$.colorInput.value
+                        color: this.$.colorInput.color
                     });
 
                     this.saveToStorage();
@@ -185,6 +186,10 @@
                         action: this.showInputs.bind(this)
                     }];
                 }
+
+
+                this.$.inputs.toggle();
+                this.$.legends.toggle();
             }
 
             deleteLegend(e) {

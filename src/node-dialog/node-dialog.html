@@ -2,6 +2,8 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
 
@@ -51,13 +53,12 @@
                     <div hidden$="{{isEditing}}">Add node</div>
                 </div>
                 <div class="inputs">
+                    <paper-input label="Label" id="labelInput" class="input" value="{{data.label::input}}" always-float-label>
+                    </paper-input>
                     <div class="horizontal center layout input">
-                        <label for="label">Label</label>
-                        <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
-                    </div>
-                    <div class="horizontal center layout input">
-                        <label for="color">Color</label>
-                        <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
+                        <label for="color">Node color</label>
+                        <paper-swatch-picker id="colorInput" color="{{data.color}}">
+                        </paper-swatch-picker>
                     </div>
 
                     <div class="horizontal center center-justified layout">
@@ -130,7 +131,7 @@
 
             save() {
                 this.data.label = this.$.labelInput.value;
-                this.data.color = this.$.colorInput.value;
+                this.data.color = this.$.colorInput.color;
 
                 let eventName = this.isEditing ? 'edit-node' : 'add-node';
                 let event = new CustomEvent(eventName, {

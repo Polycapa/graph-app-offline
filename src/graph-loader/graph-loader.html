@@ -2,6 +2,9 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
 
@@ -46,6 +49,11 @@
             .selected {
                 border: 3px solid black;
             }
+
+            paper-swatch-picker {
+                border-radius: 50%;
+                background: #dadada;
+            }
         </style>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
@@ -58,13 +66,10 @@
                     </template>
                 </div>
                 <iron-collapse id="inputs">
-                    <div class="horizontal center layout input">
-                        <label for="label">Label</label>
-                        <input type="text" name="label" id="labelInput" class="flex">
-                    </div>
+                    <paper-input label="Label" id="labelInput" class="input" always-float-label></paper-input>
                     <div class="horizontal center layout input">
                         <label for="color">Background</label>
-                        <input type="color" name="color" id="colorInput" value="#ffffff" class="flex">
+                        <paper-swatch-picker id="colorInput"></paper-swatch-picker>
                     </div>
                 </iron-collapse>
                 <iron-collapse id="graphs" opened>
@@ -180,7 +185,7 @@
 
                 if (this.$.inputs.opened) {
                     this.$.labelInput.value = '';
-                    this.$.colorInput.value = '#ffffff';
+                    this.$.colorInput.color = '#ffffff';
                     this.$.actionWindow.actions = [{
                         icon: 'save',
                         action: this.showInputs.bind(this)
@@ -193,7 +198,7 @@
                     let key = label.toLowerCase().replace(/ /g, '-');
                     let graph = {
                         label: this.$.labelInput.value,
-                        background: this.$.colorInput.value,
+                        background: this.$.colorInput.color,
                         key: key
                     };
 
