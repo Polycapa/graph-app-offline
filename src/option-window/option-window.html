@@ -19,6 +19,11 @@
 
             paper-button {
                 margin: 5px;
+                text-transform: capitalize;
+            }
+
+            paper-tooltip {
+                width: 100px;
             }
         </style>
 
@@ -29,13 +34,15 @@
                 <div class="vertical layout">
                     <template is="dom-repeat" items= {{options}} as=item index-as=index>
 
-                        <template is="dom-if" if= {{item.tooltip}}>
-                            <paper-tooltip position="bottom">
-                                [[item.tooltip]]
-                            </paper-tooltip>
-                        </template>
+                        <paper-button raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
+                            {{item.text}}
 
-                        <paper-button raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">{{item.text}}</paper-button>
+                            <template is="dom-if" if= {{item.tooltip}}>
+                                <paper-tooltip position="right">
+                                    [[item.tooltip]]
+                                </paper-tooltip>
+                            </template>
+                        </paper-button>
 
                     </template>
                 </div>
