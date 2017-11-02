@@ -336,7 +336,7 @@ class GraphCreatorGraph {
 
         if (property === 'oriented') {
             edge.style({
-                'mid-target-arrow-shape': edge.oriented ? 'triangle' : 'none'
+                'mid-target-arrow-shape': value ? 'triangle' : 'none'
             })
         }
 
