@@ -91,6 +91,40 @@
 
       _initOptions() {
 
+        let graphModes = [{
+          text: 'Select mode',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: () => {
+            this.graph.mode = 'select';
+          },
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Add node mode',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: () => {
+            this.graph.mode = 'add-node';
+          },
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Add edge mode',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: () => {
+            this.graph.mode = 'add-edge';
+          },
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Delete mode',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: () => {
+            this.graph.mode = 'delete';
+          },
+          tooltip: 'Center graph on existing nodes'
+        }]
+
         let actions = [{
           text: 'Center graph',
           background: 'var(--paper-blue-500)',
@@ -114,6 +148,9 @@
         }];
 
         this.$.optionsWindow.options = [{
+          title: 'Modes',
+          group: graphModes
+        }, {
           title: 'Actions',
           group: actions
         }, {

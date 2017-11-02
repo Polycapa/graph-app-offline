@@ -67,9 +67,13 @@ class GraphCreatorGraph {
             }]
         });
 
+        this.initEvents();
+    }
+
+    initEvents() {
         this.cy.on('tap', 'node', this._nodeClick.bind(this));
         this.cy.on('tap', 'edge', this._edgeClick.bind(this));
-        this.cy.on('cxttap', this._rightClick.bind(this));
+        this.cy.on('tap', this._globalTap.bind(this));
     }
 
     //endregion
@@ -126,6 +130,19 @@ class GraphCreatorGraph {
     //endregion
 
     //region Graph data
+
+    get mode() {
+        return this._mode || 'select';
+    }
+
+    set mode(value) {
+        let availableModes = ['select', 'add-node', 'add-edge', 'delete'];
+        if (!value || availableModes.indexOf(value) === -1) {
+            return;
+        }
+
+        this._mode = value;
+    }
     get nodes() {
         return this.cy.json().elements.nodes;
     }
@@ -455,6 +472,11 @@ class GraphCreatorGraph {
     //region Event handling
 
     _nodeClick(e) {
+
+        if (this.mode !== 'select' && this.mode !== 'add-edge') {
+            return;
+        }
+
         let node = e.target;
         let mousePosition = e.renderedPosition;
         if (this.selectedNodes.length >= 2 && !node.hasClass('selected')) {
@@ -462,38 +484,55 @@ class GraphCreatorGraph {
         }
         node.toggleClass('selected');
 
-        if (node.hasClass('selected')) {
-            this.onNodeSelection(this.cyToNode(node), mousePosition);
-        } else {
-            this.onNodeUnselection(this.cyToNode(node), mousePosition);
-        }
 
-        if (this.selectedNodes.length === 2) {
-            let firstData = this.getNodeData(this.selectedNodes[0]);
-            let secondData = this.getNodeData(this.selectedNodes[1]);
-            let nodeData = this.getNodeData(node);
+        switch (this.mode) {
+            case 'select':
+                if (node.hasClass('selected')) {
+                    this.onNodeSelection(this.cyToNode(node), mousePosition);
+                    this.selectedNodes.forEach(node => {
+                        node.removeClass('selected');
+                    });
+                    node.addClass('selected');
+                } else {
+                    this.onNodeUnselection(this.cyToNode(node), mousePosition);
+                }
+                break;
+            case 'add-edge':
+                if (this.selectedNodes.length === 2) {
+                    let firstData = this.getNodeData(this.selectedNodes[0]);
+                    let secondData = this.getNodeData(this.selectedNodes[1]);
+                    let nodeData = this.getNodeData(node);
 
-            let sourceData, targetData;
-            if (firstData.id === nodeData.id) {
-                // Node is first data
-                targetData = firstData;
-                sourceData = secondData;
-            } else {
-                // Node is second data
-                targetData = secondData;
-                sourceData = firstData;
-            }
+                    let sourceData, targetData;
+                    if (firstData.id === nodeData.id) {
+                        // Node is first data
+                        targetData = firstData;
+                        sourceData = secondData;
+                    } else {
+                        // Node is second data
+                        targetData = secondData;
+                        sourceData = firstData;
+                    }
 
-            let source = new GraphCreatorNode(sourceData.id, sourceData.x, sourceData.y);
-            let target = new GraphCreatorNode(targetData.id, targetData.x, targetData.y);
+                    let source = new GraphCreatorNode(sourceData.id, sourceData.x, sourceData.y);
+                    let target = new GraphCreatorNode(targetData.id, targetData.x, targetData.y);
 
-            this.beforeEdgeCreation(source, target, mousePosition);
-        } else {
-            this.onEdgeUnselection();
+                    this.beforeEdgeCreation(source, target, mousePosition);
+                } else {
+                    this.onEdgeUnselection();
+                }
+                break;
+            default:
+
         }
     }
 
     _edgeClick(e) {
+        console.log('edge tap');
+        if (this.mode !== 'select' && this.mode !== 'delete') {
+            return;
+        }
+
         let clickedEdge = e.target;
         let mousePosition = e.renderedPosition;
         let alreadySelected = clickedEdge.hasClass('selected');
@@ -504,27 +543,35 @@ class GraphCreatorGraph {
             this.onEdgeUnselection(this.cyToEdge(edge), mousePosition);
         });
 
+        switch (this.mode) {
+            case 'select':
+                if (!alreadySelected) {
+                    clickedEdge.addClass('selected');
+                    this.onEdgeSelection(this.cyToEdge(clickedEdge), mousePosition);
+                }
+                break;
+            case 'delete':
+                this.remove(this.getEdgeData(target).id);
+                break;
+            default:
 
-        if (!alreadySelected) {
-            clickedEdge.addClass('selected');
-            this.onEdgeSelection(this.cyToEdge(clickedEdge), mousePosition);
         }
     }
 
-    _rightClick(e) {
+    _globalTap(e) {
+
         let target = e.target;
         let position = e.position;
         let mousePosition = e.renderedPosition;
 
         if (target === this.cy) {
             // Right click on background, insert node
-            this.beforeNodeCreation(position, mousePosition);
-        } else if (target.isNode()) {
+            if (this.mode === 'add-node') {
+                this.beforeNodeCreation(position, mousePosition);
+            }
+        } else if (target.isNode() && this.mode === 'delete') {
             // Remove node
             this.remove(this.getNodeData(target).id);
-        } else if (target.isEdge()) {
-            // Remove edge
-            this.remove(this.getEdgeData(target).id);
         }
     }
 
