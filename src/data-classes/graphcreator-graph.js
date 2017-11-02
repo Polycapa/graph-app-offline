@@ -74,7 +74,7 @@ class GraphCreatorGraph {
         this.cy.on('tap', 'node', this._nodeClick.bind(this));
         this.cy.on('tap', 'edge', this._edgeClick.bind(this));
         this.cy.on('tap', this._globalTap.bind(this));
-        this.cy.on('free', 'node', this._nodeMoved.bind(this))
+        this.cy.on('drag', 'node', this._nodeMoved.bind(this))
     }
 
     //endregion
