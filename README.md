@@ -36,5 +36,5 @@ Functionalities
 - [ ] Realtime data update
 - [ ] Zoom
 - [ ] Groups
-- [ ] Reduce window
+- [x] Reduce window
 - [ ] Legend autocomplete (autocomplete edge using legend)
