@@ -287,7 +287,7 @@ class GraphCreatorGraph {
                 this.init();
             }
         } else {
-            console.error('Missing localStorage key to retrieve data');
+            console.warn('Missing localStorage key to retrieve data');
         }
     }
 
@@ -297,7 +297,7 @@ class GraphCreatorGraph {
             this.unselectAllEdges();
             localStorage.setItem(this.localStorageKey, JSON.stringify(this.json));
         } else {
-            console.error('Missing localStorage key to save data');
+            console.warn('Missing localStorage key to save data');
         }
     }
 
