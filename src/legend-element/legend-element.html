@@ -207,6 +207,7 @@
             deleteLegend(e) {
                 let index = e.model.index;
                 this.splice('legends', index, 1);
+                this.saveToStorage();
             }
 
             saveToStorage() {
