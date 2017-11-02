@@ -41,6 +41,10 @@ class GraphCreatorEdge {
         this._label = value;
     }
 
+    get arrowShape() {
+        return this.oriented ? 'triangle' : 'none';
+    }
+
     get data() {
         return {
             id: `e${this.id}`,
@@ -49,7 +53,8 @@ class GraphCreatorEdge {
             color: this.color,
             arrowColor: this.arrow,
             oriented: this.oriented,
-            label: this.label
+            label: this.label,
+            arrowShape: this.oriented ? 'triangle' : 'none'
         };
     }
 }

@@ -43,7 +43,7 @@ class GraphCreatorGraph {
                 style: {
                     'width': 3,
                     'line-color': 'data(color)',
-                    'mid-target-arrow-shape': 'none',
+                    'mid-target-arrow-shape': 'data(arrowShape)',
                     'mid-target-arrow-color': 'data(arrowColor)',
                     'mid-target-arrow-fill': 'filled',
                     'arrow-scale': 2,
@@ -333,13 +333,6 @@ class GraphCreatorGraph {
     updateEdgeProperty(edgeId, property, value) {
         let edge = this.cy.$(`#${edgeId}`);
         edge.data(property, value);
-
-        if (property === 'oriented') {
-            edge.style({
-                'mid-target-arrow-shape': value ? 'triangle' : 'none'
-            })
-        }
-
         this.saveToStorage();
     }
 
@@ -425,10 +418,7 @@ class GraphCreatorGraph {
 
         this.cy.add({
             group: 'edges',
-            data: edge.data,
-            style: {
-                'mid-target-arrow-shape': edge.oriented ? 'triangle' : 'none'
-            }
+            data: edge.data
         });
 
         this.unselectAllEdges();
