@@ -1,0 +1,106 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="action-window">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+
+
+            #window {
+                background: rgba(240, 239, 239, 0.9);
+                position: fixed;
+            }
+
+            @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
+                #window {
+                    background: rgba(240, 239, 239, 0.5);
+                    -webkit-backdrop-filter: blur(5px);
+                    backdrop-filter: blur(5px);
+                }
+            }
+
+            #window {
+                min-width: 300px;
+                border: 1px solid var(--paper-grey-300);
+                border-radius: 5px;
+                @apply(--shadow-elevation-2dp);
+            }
+
+            .title {
+                font-weight: bold;
+                font-size: 17px;
+                margin-left: 10px;
+                padding: 5px;
+            }
+        </style>
+
+        <div id="window">
+            <div class="title">
+                <div class="horizontal center end-justified layout">
+                    <div class="flex">
+                        <slot name="title"></slot>
+                    </div>
+                    <div class="actions">
+                        <template is="dom-repeat" items="{{actions}}">
+                            <paper-icon-button icon="{{item.icon}}" on-click="itemAction"></paper-icon-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <slot></slot>
+        </div>
+
+    </template>
+
+    <script>
+        /**
+         * `action-window` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class ActionWindow extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'action-window';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    actions: {
+                        type: Object,
+                        value: () => {
+                            return []
+                        }
+                    }
+                };
+            }
+
+            /**
+             * Instance of the element is created/upgraded. Use: initializing state,
+             * set up event listeners, create shadow dom.
+             * @constructor
+             */
+            constructor() {
+                super();
+            }
+
+            itemAction(e) {
+                this.actions[e.model.index].action();
+            }
+
+        }
+
+        window.customElements.define(ActionWindow.is, ActionWindow);
+    </script>
+</dom-module>
