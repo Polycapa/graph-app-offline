@@ -38,7 +38,7 @@ Functionalities
 - [ ] Groups
 - [x] Reduce window
 - [x] Legend autocomplete (autocomplete edge using legend)
-- [ ] Buttons (instead of clicking to add elements, click on button to select insertion mode)
+- [x] Buttons (instead of clicking to add elements, click on button to select insertion mode)
     - Select mode
     - Insert node mode
     - Insert edge mode
