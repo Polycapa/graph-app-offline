@@ -3,33 +3,13 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
+<link rel="import" href="../action-window/action-window.html">
 
 <dom-module id="node-dialog">
     <template>
         <style include="shared-styles">
              :host {
                 display: block;
-            }
-
-            #form {
-                background: rgba(240, 239, 239, 0.9);
-                position: fixed;
-            }
-
-            @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
-                #form {
-                    background: rgba(240, 239, 239, 0.5);
-                    -webkit-backdrop-filter: blur(5px);
-                    backdrop-filter: blur(5px);
-                }
-            }
-
-            #form {
-                width: 300px;
-                min-height: 100px;
-                border-radius: 5px;
-                padding: 5px;
-                @apply(--shadow-elevation-2dp);
             }
 
 
@@ -49,16 +29,6 @@
                 background: var(--paper-blue-500);
             }
 
-            .title {
-                font-weight: bold;
-                font-size: 17px;
-                margin-left: 10px;
-                cursor: move;
-                background: rgb(240, 239, 239);
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }
-
             label {
                 font-size: 16px;
                 font-weight: lighter;
@@ -75,35 +45,26 @@
         </style>
 
         <dragdrop-window top="100" left="100" id="dragdrop">
-            <div id="form" hidden>
-                <div class="vertical layout">
-                    <div class="horizontal center layout title">
-                        <div class="flex">
-                            <div hidden$="{{!isEditing}}">Edit node</div>
-                            <div hidden$="{{isEditing}}">Add node</div>
-                        </div>
-
-                        <paper-icon-button icon="close" on-click="close"></paper-icon-button>
-
-                    </div>
-                    <div class="inputs">
-
-                        <div class="horizontal center layout input">
-                            <label for="label">Label</label>
-                            <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
-                        </div>
-                        <div class="horizontal center layout input">
-                            <label for="color">Color</label>
-                            <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
-                        </div>
-
-                        <div class="horizontal center center-justified layout">
-                            <paper-button on-click="save">Save</paper-button>
-                        </div>
-                    </div>
-
+            <action-window id="actionWindow" close-button closed>
+                <div slot="title">
+                    <div hidden$="{{!isEditing}}">Edit node</div>
+                    <div hidden$="{{isEditing}}">Add node</div>
                 </div>
-            </div>
+                <div class="inputs">
+                    <div class="horizontal center layout input">
+                        <label for="label">Label</label>
+                        <input type="text" name="label" id="labelInput" class="flex" value="{{data.label}}">
+                    </div>
+                    <div class="horizontal center layout input">
+                        <label for="color">Color</label>
+                        <input type="color" name="color" id="colorInput" value$="{{data.color}}" placeholder="Color" class="flex">
+                    </div>
+
+                    <div class="horizontal center center-justified layout">
+                        <paper-button on-click="save">Save</paper-button>
+                    </div>
+                </div>
+            </action-window>
         </dragdrop-window>
 
     </template>
@@ -159,12 +120,12 @@
                 }
 
                 this.$.dragdrop.updatePos(mousePosition.y, mousePosition.x);
-                this.$.form.hidden = false;
+                this.$.actionWindow.open();
             }
 
             close() {
                 this.reset();
-                this.$.form.hidden = true;
+                this.$.actionWindow.close();
             }
 
             save() {
