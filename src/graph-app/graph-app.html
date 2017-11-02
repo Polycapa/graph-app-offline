@@ -185,11 +185,7 @@
           text: 'Export as URL',
           background: 'var(--paper-amber-500)',
           color: 'white',
-          action: () => {
-            let location = window.location.origin;
-            let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
-            window.location.href = graphUrl;
-          },
+          action: this.exportURL,
           tooltip: 'Show/hide legends list'
         }];
 
@@ -245,6 +241,11 @@
 
         this.graph.addGroup(data.nodesId, data.label, data.color);
       }
+
+      exportURL() {
+        let location = window.location.origin;
+        let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
+
     }
 
     window.customElements.define(GraphApp.is, GraphApp);
