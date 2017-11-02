@@ -10,12 +10,14 @@
     <style>
        :host {
         display: block;
+        --graph-background: white;
       }
 
       #graph {
         width: 100vw;
         height: 100vh;
         position: absolute;
+        background: var(--graph-background);
       }
     </style>
 
@@ -53,8 +55,6 @@
       ready() {
         super.ready();
         this.graph = new GraphCreatorGraph(cytoscape, this.$.graph);
-        // Fix from Chrome : if not done, elements added after disappear
-        this.$.graph.style.backgroundColor = 'white';
 
         this.graph.beforeNodeCreation = this.$.nodeDialog.open.bind(this.$.nodeDialog);
         this.graph.beforeEdgeCreation = (source, target, mousePosition) => {
@@ -70,7 +70,9 @@
         if (e.detail.key === this.graph.localStorageKey) {
           this.graph.localStorageKey = '';
           this.graph.init();
-
+          this.updateStyles({
+            '--graph-background': 'white'
+          });
         }
       }
 
@@ -80,6 +82,12 @@
 
         this.$.legend.storageKey = e.detail.key + '-legend';
         this.$.legend.loadFromStorage();
+
+        this.updateStyles({
+          '--graph-background': e.detail.background
+        });
+
+        console.log(e.detail);
       }
 
       _addNode(e) {
