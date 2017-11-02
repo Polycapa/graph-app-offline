@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+<link rel="import" href="../../bower_components/paper-autocomplete/paper-autocomplete.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
 
@@ -54,8 +55,8 @@
                     <div hidden$="{{isEditing}}">Add edge</div>
                 </div>
                 <div class="inputs">
-                    <paper-input label="Label" id="labelInput" class="input" value="{{data.label::input}}" always-float-label>
-                    </paper-input>
+                    <paper-autocomplete label="Label" source="[[autocompleteLegends]]" id="labelInput" on-autocomplete-selected="_autocompleteSelected"
+                        always-float-label min-length="0" show-results-on-focus></paper-autocomplete>
                     <div class="horizontal around-justified layout input">
                         <div>
                             <label for="color">
@@ -120,6 +121,19 @@
                     isEditing: {
                         type: Boolean,
                         value: false
+                    },
+                    legends: {
+                        type: Object,
+                        value: () => {
+                            return []
+                        },
+                        observer: 'setAutocompleteLegends'
+                    },
+                    autocompleteLegends: {
+                        type: Object,
+                        value: () => {
+                            return []
+                        }
                     }
                 };
             }
@@ -142,7 +156,7 @@
             }
 
             save() {
-                this.data.label = this.$.labelInput.value;
+                this.data.label = this.$.labelInput.text;
                 this.data.color = this.$.colorInput.color;
                 this.data.arrowColor = this.$.arrowColorInput.color;
 
@@ -159,11 +173,12 @@
                 this.data = {
                     source: {},
                     target: {},
-                    oriented: false,
+                    oriented: true,
                     arrowColor: '#000000',
                     color: '#ff0000',
                     label: ''
                 };
+                this.$.labelInput.clear();
                 this.isEditing = false;
             }
 
@@ -171,6 +186,28 @@
                 this.data = edge.data;
                 this.isEditing = true;
                 this.open(edge.data.source, edge.data.target, mousePosition);
+            }
+
+            setAutocompleteLegends() {
+                let legends = [];
+
+                for (let legend of this.legends) {
+                    legends.push({
+                        text: legend.label,
+                        value: legend.color
+                    })
+                }
+
+                this.set('autocompleteLegends', legends);
+            }
+
+            _autocompleteSelected() {
+                let input = this.$.labelInput;
+                setTimeout(() => {
+                    this.$.colorInput.color = input.value;
+                    this.data.label = input.text;
+                    this.data.color = input.value;
+                }, 100);
             }
         }
 

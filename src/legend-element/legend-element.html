@@ -112,7 +112,9 @@
                         type: Object,
                         value: () => {
                             return []
-                        }
+                        },
+                        reflectToAttribute: true,
+                        notify: true
                     }
                 };
             }
@@ -171,15 +173,15 @@
                         action: this.showInputs.bind(this)
                     }];
                 } else {
-                    if (!this.$.labelInput.validate()) {
-                        return;
-                    }
-                    this.push('legends', {
-                        label: this.$.labelInput.value,
-                        color: this.$.colorInput.color
-                    });
+                    if (this.$.labelInput.validate()) {
 
-                    this.saveToStorage();
+                        this.push('legends', {
+                            label: this.$.labelInput.value,
+                            color: this.$.colorInput.color
+                        });
+
+                        this.saveToStorage();
+                    }
 
                     this.$.actionWindow.actions = [{
                         icon: 'add',
