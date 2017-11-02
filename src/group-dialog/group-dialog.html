@@ -1,0 +1,155 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+<link rel="import" href="../dragdrop-window/dragdrop-window.html">
+<link rel="import" href="../action-window/action-window.html">
+
+<dom-module id="group-dialog">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+
+
+            input {
+                border: #eaeaea 1px solid;
+                border-radius: 3px;
+                margin: 5px;
+                font-size: 17px;
+            }
+
+            input[type="color"] {
+                height: 15px;
+            }
+
+            paper-button {
+                color: white;
+                background: var(--paper-blue-500);
+            }
+
+            label {
+                font-size: 16px;
+                font-weight: lighter;
+                margin-right: 5px;
+            }
+
+            .input {
+                margin: 3px;
+            }
+
+            .inputs {
+                padding: 5px;
+            }
+        </style>
+
+        <dragdrop-window top="100" left="100" id="dragdrop">
+            <action-window id="actionWindow" close-button closed>
+                <div slot="title">
+                    Add group
+                </div>
+                <div class="inputs">
+                    <div>
+                        <template is="dom-repeat" items= {{data.nodes}} as=item index-as=index>
+                            [[item.label]] -
+                        </template>
+                    </div>
+                    <paper-input label="Label" id="labelInput" class="input" value="{{data.label::input}}" always-float-label>
+                    </paper-input>
+                    <div class="horizontal center layout input">
+                        <label for="color">Group color</label>
+                        <paper-swatch-picker id="colorInput" color="{{data.color}}">
+                        </paper-swatch-picker>
+                    </div>
+
+                    <div class="horizontal center center-justified layout">
+                        <paper-button on-click="save">Save</paper-button>
+                    </div>
+                </div>
+            </action-window>
+        </dragdrop-window>
+
+    </template>
+
+    <script>
+        /**
+         * `group-dialog` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class GroupDialog extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'group-dialog';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    data: {
+                        type: Object,
+                        value: () => {
+                            return {
+                                label: '',
+                                color: '#ff0000',
+                                nodes: []
+                            }
+                        }
+                    }
+                };
+            }
+
+            open(nodes, mousePosition) {
+                this.reset();
+                this.data.nodes = nodes;
+                this.$.dragdrop.updatePos(mousePosition.y, mousePosition.x);
+                this.$.actionWindow.open();
+            }
+
+            close() {
+                this.reset();
+                this.$.actionWindow.close();
+            }
+
+            save() {
+                this.data.label = this.$.labelInput.value;
+                this.data.color = this.$.colorInput.color;
+
+                let nodesId = [];
+                for (let node of this.data.nodes) {
+                    nodesId.push(node.fullId);
+                }
+
+                this.data.nodesId = nodesId;
+                let eventName = 'add-group';
+                let event = new CustomEvent(eventName, {
+                    detail: this.data
+                })
+                this.dispatchEvent(event);
+
+                this.close();
+            }
+
+            reset() {
+                this.data = {
+                    label: '',
+                    color: '#ff0000',
+                    x: 0,
+                    y: 0
+                };
+            }
+        }
+
+        window.customElements.define(GroupDialog.is, GroupDialog);
+    </script>
+</dom-module>

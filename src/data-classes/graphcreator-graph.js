@@ -39,6 +39,18 @@ class GraphCreatorGraph {
                     'font-size': 10
                 }
             }, {
+                selector: '$node > node',
+                css: {
+                    'padding-top': '10px',
+                    'padding-left': '10px',
+                    'padding-bottom': '10px',
+                    'padding-right': '10px',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'background-color': 'data(color)',
+                    'font-size': 15
+                }
+            }, {
                 selector: 'edge',
                 style: {
                     'width': 3,
@@ -137,12 +149,15 @@ class GraphCreatorGraph {
     }
 
     set mode(value) {
-        let availableModes = ['select', 'add-node', 'add-edge', 'delete'];
+        let availableModes = ['select', 'add-node', 'add-edge', 'add-group', 'delete'];
         if (!value || availableModes.indexOf(value) === -1) {
             return;
         }
 
         this._mode = value;
+
+        this.unselectAllNodes();
+        this.unselectAllEdges();
     }
     get nodes() {
         return this.cy.json().elements.nodes;
@@ -160,6 +175,7 @@ class GraphCreatorGraph {
         return this.cy.$('edge.selected');
     }
 
+    //region Node callbacks
     get beforeNodeCreation() {
         return this._beforeNodeCreation || (_ => {});
     }
@@ -196,8 +212,9 @@ class GraphCreatorGraph {
         this._onNodeUnselection = value;
     }
 
+    //endregion
 
-
+    //region Edge callbacks
     get beforeEdgeCreation() {
         return this._beforeEdgeCreation || (_ => {});
     }
@@ -234,6 +251,22 @@ class GraphCreatorGraph {
         this._onEdgeUnselection = value;
     }
 
+    //endregion
+
+    //region Group callbacks
+    get beforeGroupCreation() {
+        return this._beforeGroupCreation || (_ => {});
+    }
+
+    set beforeGroupCreation(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._beforeGroupCreation = value;
+    }
+    //endregion
+
     get json() {
         return this.cy.json();
     }
@@ -242,16 +275,19 @@ class GraphCreatorGraph {
         this.cy.json(value);
     }
 
+    //region Storage functions
+
     loadFromStorage() {
         if (this.localStorageKey) {
             let data = localStorage.getItem(this.localStorageKey);
             if (data) {
                 this.json = JSON.parse(data);
+                this.loadGroups(JSON.parse(data));
             } else {
                 this.init();
             }
         } else {
-            console.error('Missing localStorage key to retrieve data');
+            console.warn('Missing localStorage key to retrieve data');
         }
     }
 
@@ -261,9 +297,39 @@ class GraphCreatorGraph {
             this.unselectAllEdges();
             localStorage.setItem(this.localStorageKey, JSON.stringify(this.json));
         } else {
-            console.error('Missing localStorage key to save data');
+            console.warn('Missing localStorage key to save data');
         }
     }
+
+    loadGroups(data) {
+        let nodes = data.elements.nodes;
+        let groups = {};
+        if (nodes) {
+            for (let node of nodes) {
+                let data = this.getNodeData(node);
+                if (data.parent) {
+                    if (!groups[data.parent]) {
+                        groups[data.parent] = [];
+                    }
+
+                    groups[data.parent].push(data.id);
+                }
+            }
+        }
+
+        for (var key in groups) {
+            let group = this.getNodeData(this.getNode(key));
+            this.addGroup(groups[key], group.label, group.color);
+            this.remove(group.id);
+        }
+    }
+
+    loadData(data) {
+        this.json = data;
+        this.loadGroups(data);
+    }
+
+    //endregion
 
     //endregion    
 
@@ -321,6 +387,7 @@ class GraphCreatorGraph {
         let node = new GraphCreatorNode(data.id, data.x, data.y);
         node.label = data.label;
         node.color = data.color;
+        node.parent = data.parent;
         return node;
     }
 
@@ -393,6 +460,22 @@ class GraphCreatorGraph {
         return edge;
     }
 
+    getEdgesWithNode(nodeId) {
+        let edges = [];
+
+        if (this.edges && this.edges.length) {
+            for (let edge of this.edges) {
+                edge = this.cyToEdge(edge);
+
+                if (edge.source.fullId === nodeId || edge.target.fullId === nodeId) {
+                    edges.push(edge);
+                }
+            }
+        }
+
+        return edges;
+    }
+
     deleteAllEdges() {
         if (this.edges) {
             for (let edge of this.edges) {
@@ -414,16 +497,17 @@ class GraphCreatorGraph {
      * @returns Node created
      * @memberof Graph
      */
-    addNode(x, y, label, color) {
+    addNode(x, y, label, color, parentId, nodeId) {
         // Set node data
         label = label || '';
         color = color || this.nodeColor;
 
-        var nextId = this.nextNodeId;
+        var nextId = nodeId || this.nextNodeId;
 
         let node = new GraphCreatorNode(nextId, x, y);
         node.label = label;
         node.color = color || this.nodeColor;
+        node.parent = parentId;
 
         // Add it to graph
         this.cy.add({
@@ -473,6 +557,52 @@ class GraphCreatorGraph {
 
         return edge;
     }
+
+    addGroup(nodesId, label, color) {
+        if (nodesId.length === 0) {
+            return;
+        }
+
+
+        label = label || '';
+        color = color || this.nodeColor;
+
+        let nodes = [];
+        let edges = [];
+
+        let pos = {
+            x: undefined,
+            y: undefined
+        };
+
+        let groupId = this.nextNodeId;
+
+        for (let id of nodesId) {
+            let node = this.getNode(id)
+            nodes.push(node);
+            let nodeEdges = this.getEdgesWithNode(id);
+            edges = edges.concat(nodeEdges);
+
+            if (!pos.x && !pos.y) {
+                pos.x = node.x;
+                pos.y = node.y;
+            }
+
+            this.remove(node.fullId);
+        }
+
+        let group = this.addNode(pos.x, pos.y, label, color, undefined, groupId);
+
+        for (let node of nodes) {
+            this.addNode(node.x, node.y, node.label, node.color, group.fullId, node.fullId);
+        }
+
+        for (let edge of edges) {
+            this.addEdge(edge.source, edge.target, edge.color, edge.label, edge.oriented, edge.arrowColor);
+        }
+
+        this.saveToStorage();
+    }
     //endregion
 
     //region Graph deletion
@@ -490,15 +620,12 @@ class GraphCreatorGraph {
 
     _nodeClick(e) {
 
-        if (this.mode !== 'select' && this.mode !== 'add-edge' && this.mode != 'delete') {
+        if (this.mode !== 'select' && this.mode !== 'add-edge' && this.mode !== 'delete' && this.mode !== 'add-group') {
             return;
         }
 
         let node = e.target;
         let mousePosition = e.renderedPosition;
-        if (this.selectedNodes.length >= 2 && !node.hasClass('selected')) {
-            return;
-        }
         node.toggleClass('selected');
 
 
@@ -536,8 +663,19 @@ class GraphCreatorGraph {
 
                     this.beforeEdgeCreation(source, target, mousePosition);
                 } else {
+                    if (this.selectedNodes.length > 2) {
+                        node.removeClass('selected');
+                    }
                     this.onEdgeUnselection();
                 }
+                break;
+            case 'add-group':
+                if (this.selectedNodes.length < 2) {
+                    return;
+                }
+                let selectedNodes = [];
+                this.selectedNodes.forEach(selected => selectedNodes.push(this.cyToNode(selected)));
+                this.beforeGroupCreation(selectedNodes, mousePosition);
                 break;
             case 'delete':
                 this.remove(this.getNodeData(node).id);
@@ -548,7 +686,6 @@ class GraphCreatorGraph {
     }
 
     _edgeClick(e) {
-        console.log('edge tap');
         if (this.mode !== 'select' && this.mode !== 'delete') {
             return;
         }

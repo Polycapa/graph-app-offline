@@ -2,9 +2,11 @@
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../node-dialog/node-dialog.html">
 <link rel="import" href="../edge-dialog/edge-dialog.html">
+<link rel="import" href="../group-dialog/group-dialog.html">
 <link rel="import" href="../legend-element/legend-element.html">
 <link rel="import" href="../graph-loader/graph-loader.html">
 <link rel="import" href="../option-window/option-window.html">
+<link rel="import" href="../copy-window/copy-window.html">
 
 <dom-module id="graph-app">
   <template>
@@ -22,6 +24,8 @@
       }
     </style>
 
+
+
     <legend-element save-position id="legend" legends="{{legends}}"></legend-element>
     <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
     <option-window id="optionsWindow" save-position></option-window>
@@ -29,6 +33,9 @@
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode">
     </node-dialog>
     <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge" legends="[[legends]]"></edge-dialog>
+    <group-dialog id="groupDialog" on-add-group="_addGroup"></group-dialog>
+
+    <copy-window id="copyWindow" title="Copy URL"></copy-window>
 
 
     <div id="graph">
@@ -63,6 +70,19 @@
 
         this._initGraphCallbacks();
         this._initOptions();
+
+        let url = new URL(window.location.href);
+        let graphData = url.searchParams.get('graph');
+        if (graphData) {
+          graphData = decodeURIComponent(graphData);
+          // console.log(graphData);
+          try {
+            graphData = JSON.parse(graphData);
+            this.graph.loadData(graphData);
+          } catch (e) {
+            console.error(e);
+          }
+        }
       }
 
       _resetGraph(e) {
@@ -81,6 +101,7 @@
           this.$.nodeDialog.close();
           this.$.edgeDialog.open(source, target, mousePosition);
         }
+        this.graph.beforeGroupCreation = this.$.groupDialog.open.bind(this.$.groupDialog);
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
         this.graph.onNodeUnselection = this.$.nodeDialog.close.bind(this.$.nodeDialog);
@@ -113,6 +134,14 @@
           color: 'white',
           action: () => {
             this.graph.mode = 'add-edge';
+          },
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Add group mode',
+          background: 'var(--paper-blue-500)',
+          color: 'white',
+          action: () => {
+            this.graph.mode = 'add-group';
           },
           tooltip: 'Center graph on existing nodes'
         }, {
@@ -157,6 +186,12 @@
           color: 'white',
           action: this.$.legend.toggle.bind(this.$.legend),
           tooltip: 'Show/hide legends list'
+        }, {
+          text: 'Export as URL',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: this.exportURL.bind(this),
+          tooltip: 'Show/hide legends list'
         }];
 
         this.$.optionsWindow.options = [{
@@ -182,8 +217,6 @@
         this.updateStyles({
           '--graph-background': e.detail.background
         });
-
-        console.log(e.detail);
       }
 
       _addNode(e) {
@@ -206,6 +239,19 @@
         let data = e.detail;
         this.graph.updateEdgeData(data.id, data);
         this.graph.unselectAllEdges();
+      }
+
+      _addGroup(e) {
+        let data = e.detail;
+
+        this.graph.addGroup(data.nodesId, data.label, data.color);
+      }
+
+      exportURL() {
+        let location = window.location.origin;
+        let graphUrl = `${location}/?graph=${encodeURIComponent(JSON.stringify(this.graph.json))}`;
+        this.$.copyWindow.text = graphUrl;
+        this.$.copyWindow.open();
       }
     }
 

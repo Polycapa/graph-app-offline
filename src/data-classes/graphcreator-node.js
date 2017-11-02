@@ -34,6 +34,14 @@ class GraphCreatorNode {
         this._color = value;
     }
 
+    get parent() {
+        return this._parent;
+    }
+
+    set parent(value) {
+        this._parent = value;
+    }
+
     get data() {
         return {
             id: this.fullId,
@@ -41,6 +49,7 @@ class GraphCreatorNode {
             y: this.y,
             label: this.label,
             color: this.color,
+            parent: this.parent
         };
     }
 
