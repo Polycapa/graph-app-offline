@@ -35,3 +35,4 @@ Functionalities
 - [x] Multiple graph
 - [ ] Groups
 - [ ] Reduce window
+- [ ] Legend autocomplete (autocomplete edge using legend)
