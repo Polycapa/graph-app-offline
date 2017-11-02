@@ -31,7 +31,7 @@ Functionalities
     - [x] Legend 
 - [ ] PNG export
 - [ ] File export
-- [ ] Read only URL (export a graph into an url)
+- [x] Read only URL (export a graph into an url)
 - [x] Multiple graph
 - [ ] Realtime data update
 - [x] Zoom
