@@ -8,7 +8,7 @@ const browserSync = require('browser-sync');
 
 const src = './';
 const dist = './dist';
-const filesToWatch = [`${src}src/**/*`, `${src}index.html`];
+const filesToWatch = [`${src}src/**/*`];
 
 const baseUrl = '/graph/';
 
