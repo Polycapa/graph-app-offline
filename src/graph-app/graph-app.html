@@ -45,6 +45,7 @@
     </div>
   </template>
   <script src="../../bower_components/cytoscape/dist/cytoscape.min.js"></script>
+  <script src="../../bower_components/cytoscape.js-undo-redo/cytoscape-undo-redo.js"></script>
   <script src="../../bower_components/file-saver/FileSaver.min.js"></script>
 
   <script src="../data-classes/graphcreator-node.js"></script>
@@ -175,6 +176,18 @@
           background: 'var(--paper-red-700)',
           color: 'white',
           action: this.graph.deleteAllEdges.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Undo',
+          background: 'var(--paper-red-700)',
+          color: 'white',
+          action: this.graph.undo.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Redo',
+          background: 'var(--paper-red-700)',
+          color: 'white',
+          action: this.graph.redo.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
         }];
 
