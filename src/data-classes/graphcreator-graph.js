@@ -148,7 +148,7 @@ class GraphCreatorGraph {
         this.cy.animate({
             fit: {
                 eles: item,
-                padding: 350
+                padding: 200
             }
         });
     }
