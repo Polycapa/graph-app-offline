@@ -60,7 +60,7 @@
                             <paper-icon-button icon="{{item.icon}}" on-click="itemAction"></paper-icon-button>
                         </template>
                     </div>
-                    <paper-icon-button icon="expand-less" on-click="toggleExpand" hidden$="{{!reduceButton}}"></paper-icon-button>
+                    <paper-icon-button icon="expand-less" on-click="toggleExpand" hidden$="{{!reduceButton}}" id="expandIcon"></paper-icon-button>
                     <paper-icon-button icon="close" on-click="close" hidden$="{{!closeButton}}"></paper-icon-button>
                 </div>
             </div>
@@ -113,7 +113,8 @@
                     },
                     reduced: {
                         type: Boolean,
-                        value: false
+                        value: false,
+                        observer: 'setExpand'
                     }
                 };
             }
@@ -148,9 +149,25 @@
                 }
             }
 
+            expand() {
+                this.reduced = false;
+            }
+
+            unexpand() {
+                this.reduced = true;
+            }
+
             toggleExpand(e) {
-                this.$.window.classList.toggle('reduced');
-                e.target.icon = this.$.window.classList.contains('reduced') ? 'expand-more' : 'expand-less';
+                this.reduced = !this.reduced;
+            }
+
+            setExpand() {
+                if (this.reduced) {
+                    this.$.window.classList.add('reduced');
+                } else {
+                    this.$.window.classList.remove('reduced');
+                }
+                this.$.expandIcon.icon = this.reduced ? 'expand-more' : 'expand-less';
             }
 
         }
