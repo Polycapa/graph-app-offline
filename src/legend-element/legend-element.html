@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-swatch-picker/paper-swatch-picker.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
 
@@ -46,8 +47,13 @@
             }
         </style>
 
+
+        <iron-media-query query="min-width: 640px" query-matches="{{largeScreen}}">
+        </iron-media-query>
+
+
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
-            <action-window id="actionWindow" reduce-button>
+            <action-window id="actionWindow" reduce-button reduced="[[!largeScreen]]">
                 <div slot="title">Legend</div>
                 <iron-collapse id="inputs">
                     <paper-input label="Label" id="labelInput" class="input" always-float-label required error-message="Required" on-keyup="_handleKeyUp">
