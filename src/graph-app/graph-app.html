@@ -206,6 +206,12 @@
           color: 'white',
           action: this.exportJSON.bind(this),
           tooltip: 'Show/hide legends list'
+        }, {
+          text: 'Import file',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: this.importJSON.bind(this),
+          tooltip: 'Show/hide legends list'
         }];
 
         this.$.optionsWindow.options = [{
@@ -297,6 +303,34 @@
         });
         let key = this.graph.localStorageKey || 'graph';
         saveAs(blob, `${key}.json`);
+      }
+
+      importJSON() {
+        let input = document.createElement('INPUT');
+        input.type = 'file';
+        input.click();
+
+        input.addEventListener('change', e => {
+          let file = input.files[0];
+
+          let extension = file.name.substring(file.name.lastIndexOf('.') + 1);
+
+          if (extension === 'json') {
+            let reader = new FileReader();
+            reader.addEventListener('load', e => {
+              let data = reader.result;
+              try {
+                this.graph.loadData(JSON.parse(data));
+              } catch (e) {
+                console.error(e);
+              }
+            })
+
+            reader.readAsText(file);
+          } else {
+            console.error('The file is not a JSON file');
+          }
+        })
       }
     }
 
