@@ -54,10 +54,12 @@
                 <div class="vertical layout options">
                     <template is="dom-repeat" items= {{options}} index-as="groupIndex" as="options">
 
-                        <div class="group-title" on-click="_toggleCollapse" data-group$="[[groupIndex]]">
-                            [[options.title]]
+                        <div class="group-title horizontal center end-justified layout">
+                            <div class="flex">[[options.title]]</div>
+                            <paper-icon-button icon="expand-more" on-click="_toggleCollapse" data-group$="[[groupIndex]]"></paper-icon-button>
+
                         </div>
-                        <iron-collapse opened id$="options-{{groupIndex}}">
+                        <iron-collapse opened="{{options.opened}}" id$="options-{{groupIndex}}">
                             <div class="horizontal around-justified wrap layout">
                                 <template is="dom-repeat" items= {{options.group}} as=item index-as=index>
                                     <paper-button data-group$="[[groupIndex]]" raised style$="background-color:{{item.background}};color:{{item.color}};" on-click="_doAction">
@@ -179,7 +181,7 @@
             _toggleCollapse(e) {
                 let target = e.target;
                 let index = target.getAttribute('data-group');
-                target.parentNode.querySelector(`#options-${index}`).toggle();
+                target.parentNode.parentNode.querySelector(`#options-${index}`).toggle();
             }
 
             emit(eventName, data) {
