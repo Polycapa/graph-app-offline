@@ -112,13 +112,19 @@
         this.graph.beforeGroupCreation = this.$.groupDialog.open.bind(this.$.groupDialog);
 
         this.graph.onNodeSelection = this.$.nodeDialog.edit.bind(this.$.nodeDialog);
-        this.graph.onNodeUnselection = this.$.nodeDialog.close.bind(this.$.nodeDialog);
+        this.graph.onNodeUnselection = () => {
+          this.$.nodeDialog.close();
+          this._updatePathFinderNodes();
+        };
 
         this.graph.onEdgeSelection = this.$.edgeDialog.edit.bind(this.$.edgeDialog);
-        this.graph.onEdgeUnselection = this.$.edgeDialog.close.bind(this.$.edgeDialog);
+        this.graph.onEdgeUnselection = () => {
+          this.$.edgeDialog.close();
+          this._updatePathFinderNodes();
+        };
 
         this.graph.onNodeRemoving = item => {
-          this.$.pathWindow.nodes = this.graph.formattedNodes;
+          this._updatePathFinderNodes();
         }
       }
 
@@ -277,7 +283,7 @@
         this.$.legend.storageKey = e.detail.key + '-legend';
         this.$.legend.loadFromStorage();
 
-        this.$.pathWindow.nodes = this.graph.formattedNodes;
+        this._updatePathFinderNodes()
 
         this.updateStyles({
           '--graph-background': e.detail.background
@@ -287,7 +293,7 @@
       _addNode(e) {
         let data = e.detail;
         this.graph.addNode(data.x, data.y, data.label, data.color);
-        this.$.pathWindow.nodes = this.graph.formattedNodes;
+        this._updatePathFinderNodes()
       }
 
       _editNode(e) {
@@ -327,6 +333,11 @@
 
       _getPath(e) {
         this.$.pathWindow.results = this.graph.dijkstra(e.detail.start, e.detail.end);
+      }
+
+      _updatePathFinderNodes() {
+        this.$.pathWindow.nodes = this.graph.formattedNodes;
+        this.$.pathWindow.getResults();
       }
 
       //region Export functions
