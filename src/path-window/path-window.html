@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
 <link rel="import" href="../dragdrop-window/dragdrop-window.html">
 <link rel="import" href="../action-window/action-window.html">
@@ -11,6 +12,49 @@
              :host {
                 display: block
             }
+
+            #actionWindow {
+                --action-window-mixin: {
+                    max-width: 500px;
+                }
+            }
+
+            .distance {
+                font-size: 18px;
+                font-weight: lighter;
+                margin: 5px;
+                padding: 5px;
+                border-radius: 3px;
+                background-color: var(--paper-blue-500);
+                color: white;
+            }
+
+            .results {
+                border-top: 1px solid rgb(59, 59, 59);
+                padding: 5px;
+            }
+
+            .node {
+                border-radius: 50%;
+                padding: 5px;
+                width: 50px;
+                height: 50px;
+                margin: 5px;
+                text-align: center;
+            }
+
+            .edge-body {
+                width: 100px;
+                padding: 5px;
+                text-align: center;
+                min-height: 10px;
+                border-radius: 20px;
+            }
+
+            iron-icon {
+                height: 40px;
+                width: 40px;
+            }
         </style>
 
         <iron-media-query query="min-width: 640px" query-matches="{{largeScreen}}">
@@ -19,7 +63,45 @@
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
             <action-window id="actionWindow" close-button reduce-button reduced="[[!largeScreen]]">
                 <div slot="title">Path finder</div>
-                <autocomplete-input items="[[nodes]]" search-property="label"></autocomplete-input>
+                <div class="horizontal around-justified layout">
+                    <autocomplete-input items="[[nodes]]" search-property="label" class="flex" label="Start node" on-item-selected="_setStartNode"
+                        on-clear="_setStartNode"></autocomplete-input>
+                    <autocomplete-input items="[[nodes]]" search-property="label" class="flex" label="End node" on-item-selected="_setEndNode"
+                        on-clear="_setEndNode"></autocomplete-input>
+                </div>
+
+                <template is="dom-if" if="{{results.distance}}">
+                    <div class="results">
+                        <div class="distance horizontal center center-justified layout">
+                            Distance :
+                            <b style="margin-left: 3px"> [[results.distance]]</b>
+                        </div>
+                        <div class="path horizontal center start-justified wrap layout">
+
+                            <template is="dom-repeat" items="{{results.path}}" as=item index-as=index>
+
+                                <template is="dom-if" if="{{item.source}}">
+                                    <template is="dom-if" if="{{!item.oriented}}">
+                                        <iron-icon icon="chevron-left" style$="color:{{item.color}}"></iron-icon>
+                                    </template>
+                                    <div class="edge-body" style$="background-color:{{item.color}}">
+                                        [[item.label]]
+                                    </div>
+                                    <iron-icon icon="chevron-right" style$="color:{{item.color}}"></iron-icon>
+                                </template>
+
+                                <template is="dom-if" if="{{!item.source}}">
+                                    <div class="node horizontal center center-justified layout" style$="background-color: {{item.color}};" on-click="_center">
+                                        [[item.label]]
+                                    </div>
+                                </template>
+
+                            </template>
+
+                        </div>
+                    </div>
+                </template>
+
             </action-window>
         </dragdrop-window>
 
@@ -62,6 +144,18 @@
                     nodes: {
                         type: Object,
                         value: () => []
+                    },
+                    startNode: Object,
+                    endNode: Object,
+                    results: {
+                        type: Object,
+                        value: () => {
+                            return {
+                                distance: undefined,
+                                path: []
+                            }
+                        },
+                        observer: '_resultsChanged'
                     }
                 };
             }
@@ -90,6 +184,58 @@
                     }
                 }
 
+            }
+
+            _resultsChanged() {}
+
+            _setStartNode(e) {
+                this.startNode = e.detail;
+                this.getResults();
+            }
+
+            _setEndNode(e) {
+                this.endNode = e.detail;
+                this.getResults();
+            }
+
+            getResults() {
+                if (this.startNode && this.endNode) {
+                    console.log('get results');
+                    this.emit('get-path', {
+                        start: this.startNode.fullId,
+                        end: this.endNode.fullId
+                    })
+                } else {
+                    this.results = {
+                        distance: undefined,
+                        path: []
+                    };
+                }
+            }
+
+            _constructPath() {
+                let path = '';
+
+                for (let item of this.results.path) {
+                    if (item.source) {
+                        // Item is an edge
+
+                        path += item.oriented ? ' ' : ' <';
+
+                        path += item.label ? `--- ${item.label} ---` : '------';
+
+                        path += '> ';
+                    } else {
+                        // Item is a node
+                        path += item.label;
+                    }
+                }
+
+                return path;
+            }
+
+            _center(e) {
+                let item = this.items[e.model.index];
             }
 
             _savePosition(e) {
