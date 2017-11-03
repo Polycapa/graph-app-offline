@@ -116,6 +116,7 @@
                         let event = new CustomEvent('item-selected', {
                             detail: data
                         });
+                        this.search = this._itemDisplay(item);
                         this.dispatchEvent(event);
                         break;
                     }
