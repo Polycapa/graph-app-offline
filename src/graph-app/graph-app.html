@@ -160,43 +160,45 @@
 
         let actions = [{
           text: 'Center graph',
-          background: 'var(--paper-blue-500)',
+          background: 'var(--paper-red-700)',
           color: 'white',
           action: this.graph.center.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
         }, {
           text: 'Delete nodes',
-          background: 'var(--paper-blue-500)',
+          background: 'var(--paper-red-700)',
           color: 'white',
           action: this.graph.deleteAllNodes.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
         }, {
           text: 'Delete edges',
-          background: 'var(--paper-blue-500)',
+          background: 'var(--paper-red-700)',
           color: 'white',
           action: this.graph.deleteAllEdges.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
+        }];
+
+        let views = [{
+          text: 'Graphs list',
+          background: 'var(--paper-indigo-500)',
+          color: 'white',
+          action: this.$.loader.toggle.bind(this.$.loader),
+          tooltip: 'Show/hide graphs list'
+        }, {
+          text: 'Legends list',
+          background: 'var(--paper-indigo-500)',
+          color: 'white',
+          action: this.$.legend.toggle.bind(this.$.legend),
+          tooltip: 'Show/hide legends list'
         }, {
           text: 'Search',
-          background: 'var(--paper-blue-500)',
+          background: 'var(--paper-indigo-500)',
           color: 'white',
           action: this.$.searchWindow.toggle.bind(this.$.searchWindow),
           tooltip: 'Center graph on existing nodes'
         }];
 
         let options = [{
-          text: 'Toggle graphs list',
-          background: 'var(--paper-amber-500)',
-          color: 'white',
-          action: this.$.loader.toggle.bind(this.$.loader),
-          tooltip: 'Show/hide graphs list'
-        }, {
-          text: 'Toggle legends list',
-          background: 'var(--paper-amber-500)',
-          color: 'white',
-          action: this.$.legend.toggle.bind(this.$.legend),
-          tooltip: 'Show/hide legends list'
-        }, {
           text: 'Export as URL',
           background: 'var(--paper-amber-500)',
           color: 'white',
@@ -230,6 +232,10 @@
         }, {
           title: 'Actions',
           group: actions,
+          opened: false
+        }, {
+          title: 'Views',
+          group: views,
           opened: false
         }, {
           title: 'Options',
