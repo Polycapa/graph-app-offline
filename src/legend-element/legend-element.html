@@ -176,7 +176,6 @@
             }
 
             showInputs() {
-
                 if (!this.$.inputs.opened) {
                     this.$.labelInput.value = '';
                     this.$.colorInput.color = '#ff0000';
@@ -187,7 +186,6 @@
                     }];
                 } else {
                     if (this.$.labelInput.validate()) {
-
                         this.push('legends', {
                             label: this.$.labelInput.value,
                             color: this.$.colorInput.color
@@ -208,8 +206,10 @@
                 }
 
 
-                this.$.inputs.toggle();
-                this.$.legends.toggle();
+                setTimeout(() => {
+                    this.$.inputs.toggle();
+                    this.$.legends.toggle();
+                }, 50);
             }
 
             deleteLegend(e) {

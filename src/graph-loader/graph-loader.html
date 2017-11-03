@@ -186,10 +186,7 @@
             }
 
             showInputs() {
-                this.$.inputs.toggle();
-                this.$.graphs.toggle();
-
-                if (this.$.inputs.opened) {
+                if (!this.$.inputs.opened) {
                     this.$.labelInput.value = '';
                     this.$.colorInput.color = '#ffffff';
                     this.$.actionWindow.actions = [{
@@ -218,6 +215,12 @@
 
                     this.saveToStorage();
                 }
+
+
+                setTimeout(() => {
+                    this.$.inputs.toggle();
+                    this.$.graphs.toggle();
+                }, 50);
             }
 
             deleteGraph(e) {
