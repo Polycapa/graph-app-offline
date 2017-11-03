@@ -175,6 +175,14 @@ class GraphCreatorGraph {
         return this.cy.$('edge.selected');
     }
 
+    png(background) {
+        background = background || 'white';
+        return this.cy.png({
+            output: 'blob',
+            bg: background
+        });
+    }
+
     //region Node callbacks
     get beforeNodeCreation() {
         return this._beforeNodeCreation || (_ => {});

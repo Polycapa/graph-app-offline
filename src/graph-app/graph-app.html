@@ -43,6 +43,7 @@
     </div>
   </template>
   <script src="../../bower_components/cytoscape/dist/cytoscape.min.js"></script>
+  <script src="../../bower_components/file-saver/FileSaver.min.js"></script>
 
   <script src="../data-classes/graphcreator-node.js"></script>
   <script src="../data-classes/graphcreator-edge.js"></script>
@@ -193,6 +194,12 @@
           color: 'white',
           action: this.exportURL.bind(this),
           tooltip: 'Show/hide legends list'
+        }, {
+          text: 'Export as PNG',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: this.exportPNG.bind(this),
+          tooltip: 'Show/hide legends list'
         }];
 
         this.$.optionsWindow.options = [{
@@ -262,6 +269,20 @@
       _updateEdgeAutocomplete(e) {
         console.log(e.detail);
         this.$.edgeDialog.legends = e.detail;
+      }
+
+      exportPNG() {
+        let background = 'white';
+        if (window.ShadyCSS) {
+          background = ShadyCSS.getComputedStyleValue(this, '--graph-background');
+        } else {
+          background = getComputedStyle(el).getPropertyValue('--graph-background');
+        }
+
+        let pngBlob = this.graph.png(background);
+
+        let key = this.graph.localStorageKey || 'graph';
+        saveAs(pngBlob, `${key}.png`)
       }
     }
 
