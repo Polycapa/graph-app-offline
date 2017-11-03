@@ -260,6 +260,19 @@ class GraphCreatorGraph {
         this._onNodeUnselection = value;
     }
 
+    get onNodeRemoving() {
+        return this._onNodeRemoving || (_ => {});
+    }
+
+    set onNodeRemoving(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._onNodeRemoving = value;
+    }
+
+
     //endregion
 
     //region Edge callbacks
@@ -297,6 +310,18 @@ class GraphCreatorGraph {
         }
 
         this._onEdgeUnselection = value;
+    }
+
+    get onEdgeRemoving() {
+        return this._onEdgeRemoving || (_ => {});
+    }
+
+    set onEdgeRemoving(value) {
+        if (typeof value !== "function") {
+            return;
+        }
+
+        this._onEdgeRemoving = value;
     }
 
     //endregion
@@ -714,6 +739,10 @@ class GraphCreatorGraph {
         let item = this.cy.$(`#${id}`);
         this.undoRedo.do('remove', item);
 
+        let callback = item.isNode ? this.onNodeRemoving : this.onEdgeRemoving;
+
+        callback(item);
+
         this.saveToStorage();
     }
 
@@ -872,4 +901,6 @@ class GraphCreatorGraph {
             path: path
         };
     }
+
+    //endregion
 }
