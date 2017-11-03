@@ -844,4 +844,24 @@ class GraphCreatorGraph {
         return this.undoRedo.redo();
     }
     //endregion
+
+    //region Algorithms
+
+    dijkstra(startId, endId) {
+        let dijkstra = this.cy.elements().dijkstra(`#${startId}`, () => 1);
+
+        let end = this.getCyNode(endId);
+        let distance = dijkstra.distanceTo(end);
+        let cyPath = dijkstra.pathTo(end);
+        let path = [];
+
+        cyPath.forEach(item => {
+            path.push(item.isNode() ? this.cyToNode(item) : this.cyToEdge(item));
+        });
+
+        return {
+            distance: distance,
+            path: path
+        };
+    }
 }
