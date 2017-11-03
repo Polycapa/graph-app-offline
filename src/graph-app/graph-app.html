@@ -276,6 +276,8 @@
         this.$.legend.storageKey = e.detail.key + '-legend';
         this.$.legend.loadFromStorage();
 
+        this.$.pathWindow.nodes = this.graph.formattedNodes;
+
         this.updateStyles({
           '--graph-background': e.detail.background
         });
