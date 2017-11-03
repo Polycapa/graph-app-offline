@@ -32,7 +32,7 @@
     <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
     <option-window id="optionsWindow" save-position></option-window>
     <search-window id="searchWindow" save-position on-search="_handleSearch" on-item-selected="_handleSearchSelected"></search-window>
-    <path-window id="pathWindow" save-position></path-window>
+    <path-window id="pathWindow" save-position on-get-path="_getPath"></path-window>
 
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode">
     </node-dialog>
@@ -85,6 +85,7 @@
           try {
             graphData = JSON.parse(graphData);
             this.graph.loadData(graphData);
+            this.$.pathWindow.nodes = this.graph.formattedNodes;
           } catch (e) {
             console.error(e);
           }
@@ -322,6 +323,10 @@
 
       _handleSearchSelected(e) {
         this.graph.centerOn(e.detail.id);
+      }
+
+      _getPath(e) {
+        this.$.pathWindow.results = this.graph.dijkstra(e.detail.start, e.detail.end);
       }
 
       //region Export functions
