@@ -44,7 +44,10 @@ gulp.task('clean:build', () => {
 gulp.task('clean', ['clean:dist', 'clean:build']);
 
 gulp.task('serve', ['browser-sync'], () => {
-    gulp.watch(filesToWatch, browserSync.reload());
+    gulp.watch(filesToWatch, () => {
+        console.log('Reloading browser...');
+        browserSync.reload()
+    });
 });
 
 gulp.task('serve:build', ['build'], shell.task([
