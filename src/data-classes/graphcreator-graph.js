@@ -79,6 +79,8 @@ class GraphCreatorGraph {
             }]
         });
 
+        this.undoRedo = this.cy.undoRedo();
+
         this.initEvents();
     }
 
@@ -601,12 +603,12 @@ class GraphCreatorGraph {
         node.parent = parentId;
 
         // Add it to graph
-        this.cy.add({
+        this.undoRedo.do('add', {
             group: "nodes",
             data: node.data,
             position: node.position,
             grabbable: true
-        });
+        })
 
         this.unselectAllNodes();
 
@@ -636,7 +638,7 @@ class GraphCreatorGraph {
         edge.arrow = arrowColor;
         edge.label = label;
 
-        this.cy.add({
+        this.undoRedo.do('add', {
             group: 'edges',
             data: edge.data
         });
@@ -702,7 +704,7 @@ class GraphCreatorGraph {
 
     remove(id) {
         let item = this.cy.$(`#${id}`);
-        this.cy.remove(item);
+        this.undoRedo.do('remove', item);
 
         this.saveToStorage();
     }
@@ -830,5 +832,16 @@ class GraphCreatorGraph {
         this.saveToStorage();
     }
 
+    //endregion
+
+    //region Undo redo
+
+    undo() {
+        return this.undoRedo.undo();
+    }
+
+    redo() {
+        return this.undoRedo.redo();
+    }
     //endregion
 }
