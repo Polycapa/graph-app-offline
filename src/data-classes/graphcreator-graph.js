@@ -199,6 +199,14 @@ class GraphCreatorGraph {
         return this.cy.json().elements.edges;
     }
 
+    get formattedNodes() {
+        let nodes = [];
+        if (this.nodes) {
+            this.nodes.forEach(node => nodes.push(this.cyToNode(node)));
+        }
+        return nodes;
+    }
+
     get selectedNodes() {
         return this.cy.$('node.selected');
     }
