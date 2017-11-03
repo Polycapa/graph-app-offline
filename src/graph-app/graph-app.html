@@ -115,6 +115,10 @@
 
         this.graph.onEdgeSelection = this.$.edgeDialog.edit.bind(this.$.edgeDialog);
         this.graph.onEdgeUnselection = this.$.edgeDialog.close.bind(this.$.edgeDialog);
+
+        this.graph.onNodeRemoving = item => {
+          this.$.pathWindow.nodes = this.graph.formattedNodes;
+        }
       }
 
       _initOptions() {
@@ -280,6 +284,7 @@
       _addNode(e) {
         let data = e.detail;
         this.graph.addNode(data.x, data.y, data.label, data.color);
+        this.$.pathWindow.nodes = this.graph.formattedNodes;
       }
 
       _editNode(e) {
