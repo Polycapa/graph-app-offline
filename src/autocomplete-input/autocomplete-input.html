@@ -1,0 +1,111 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="autocomplete-input">
+    <template>
+        <style>
+             :host {
+                display: block
+            }
+
+            paper-input {
+                margin: 5px;
+            }
+
+            paper-listbox {
+                background: inherit;
+            }
+        </style>
+
+        <div>
+            <paper-input label="Search" value="{{search::input}}">
+                <paper-icon-button icon="clear" slot="suffix" on-click="clear" hidden$="{{!search}}"></paper-icon-button>
+            </paper-input>
+        </div>
+        <paper-listbox>
+            <template is="dom-repeat" items="{{items}}" as=item index-as=index filter="{{_filter(search)}}">
+                <paper-item>[[_itemDisplay(item)]]</paper-item>
+            </template>
+        </paper-listbox>
+
+    </template>
+
+    <script>
+        /**
+         * `autocomplete-input` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class AutocompleteInput extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'autocomplete-input';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    search: {
+                        type: String,
+                        value: '',
+                        observer: '_searchChanged'
+                    },
+                    items: {
+                        type: Object,
+                        value: () => []
+                    },
+                    searchProperty: String,
+                    displayAll: {
+                        type: Boolean,
+                        value: false
+                    }
+                };
+            }
+
+
+
+            clear() {
+                this.set('search', '');
+            }
+
+            _itemDisplay(item) {
+                return this.searchProperty ? item[this.searchProperty] : item;
+            }
+
+            _searchChanged(e) {}
+
+            _filter(search) {
+                return item => {
+                    if (!search && !this.displayAll) {
+                        return false;
+                    }
+
+                    search = search.toLowerCase();
+                    let property = this.searchProperty ? item[this.searchProperty] : item;
+                    if (property.toLowerCase) {
+                        property = property.toLowerCase();
+                    }
+
+                    if (property.indexOf) {
+                        return property.indexOf(search) !== -1;
+                    } else {
+                        return property == search;
+                    }
+                }
+            }
+
+        }
+
+        window.customElements.define(AutocompleteInput.is, AutocompleteInput);
+    </script>
+</dom-module>
