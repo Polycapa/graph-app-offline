@@ -29,11 +29,11 @@ Functionalities
 - [x] LocalStorage
     - [x] Graph
     - [x] Legend 
-- [ ] PNG export
-- [ ] File export
+- [x] PNG export
+- [x] File export
+- [ ] File import
 - [x] Read only URL (export a graph into an url)
 - [x] Multiple graph
-- [ ] Realtime data update
 - [x] Zoom
 - [x] Groups
 - [x] Reduce window
