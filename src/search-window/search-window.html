@@ -1,0 +1,186 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../dragdrop-window/dragdrop-window.html">
+<link rel="import" href="../action-window/action-window.html">
+
+<dom-module id="search-window">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+
+            paper-input {
+                margin: 5px;
+            }
+
+            paper-listbox {
+                background: inherit;
+            }
+        </style>
+
+        <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
+            <action-window id="actionWindow" reduce close-button>
+                <div slot="title">Search</div>
+                <div class="vertical layout">
+                    <div class="horizontal center center-justified layout">
+                        <paper-radio-group selected="{{type}}">
+                            <paper-radio-button name="node">Node</paper-radio-button>
+                            <paper-radio-button name="edge">Edge</paper-radio-button>
+                        </paper-radio-group>
+                    </div>
+
+                    <paper-input label="Search" value="{{search::input}}">
+                        <paper-icon-button icon="search" slot="suffix" on-click="launchSearch"></paper-icon-button>
+                    </paper-input>
+
+                    <template is="dom-if" if="{{searchResults.length}}">
+                        <paper-listbox>
+                            <template is="dom-repeat" items= {{searchResults}} as=item index-as=index>
+                                <paper-item on-click="selectItem">[[item.label]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </template>
+
+                </div>
+            </action-window>
+        </dragdrop-window>
+
+    </template>
+
+    <script>
+        /**
+         * `search-window` Description
+         *
+         * @summary ShortDescription.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class SearchWindow extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'search-window';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+
+                    savePosition: {
+                        type: Boolean,
+                        value: false
+                    },
+                    top: {
+                        type: Number,
+                        value: 100
+                    },
+                    left: {
+                        type: Number,
+                        value: 100
+                    },
+                    type: {
+                        type: String,
+                        value: 'node',
+                        observer: 'launchSearch'
+                    },
+                    search: {
+                        type: String,
+                        observer: 'launchSearch'
+                    },
+                    searchResults: {
+                        type: Object,
+                        value: () => []
+                    }
+                };
+            }
+
+            /**
+             * Instance of the element is created/upgraded. Use: initializing state,
+             * set up event listeners, create shadow dom.
+             * @constructor
+             */
+            constructor() {
+                super();
+            }
+
+            /**
+             * Use for one-time configuration of your component after local DOM is initialized. 
+             */
+            ready() {
+                super.ready();
+
+                if (this.savePosition) {
+                    let position = localStorage.getItem('graph-search-position');
+                    if (position) {
+                        position = JSON.parse(position);
+                        this.top = position.y;
+                        this.left = position.x;
+                    }
+                }
+
+            }
+
+            launchSearch() {
+                if (!this.search) {
+                    this.searchResults = [];
+                } else {
+                    this.emit('search', {
+                        type: this.type,
+                        value: this.search
+                    });
+                }
+            }
+
+            selectItem(e) {
+                let item = this.searchResults[e.model.index];
+                this.emit('item-selected', {
+                    id: item.fullId
+                });
+            }
+
+            emit(eventName, data) {
+                let event = new CustomEvent(eventName, {
+                    detail: data
+                });
+                this.dispatchEvent(event);
+            }
+
+            //region Position functions
+
+            _savePosition(e) {
+                this.top = e.detail.y;
+                this.left = e.detail.x;
+
+                if (this.savePosition) {
+                    localStorage.setItem('graph-search-position', JSON.stringify(e.detail));
+                }
+            }
+
+            show() {
+                this.$.actionWindow.open();
+            }
+
+            hide() {
+                this.$.actionWindow.close();
+            }
+
+            toggle() {
+                this.$.actionWindow.toggle();
+            }
+
+            //endregion
+        }
+
+        window.customElements.define(SearchWindow.is, SearchWindow);
+    </script>
+</dom-module>

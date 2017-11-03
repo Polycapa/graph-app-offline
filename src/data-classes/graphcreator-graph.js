@@ -140,6 +140,36 @@ class GraphCreatorGraph {
             }
         });
     }
+
+    centerOn(id) {
+        let item = this.cy.$(`#${id}`);
+        this.cy.animate({
+            fit: {
+                eles: item,
+                padding: 350
+            }
+        });
+    }
+
+    centerOnNode(nodeId) {
+        let node = this.getCyNode(nodeId);
+        this.cy.animate({
+            fit: {
+                eles: node,
+                padding: 50
+            }
+        });
+    }
+
+    centerOnEdge(edgeId) {
+        let edge = this.getCyEdge(edgeId);
+        this.cy.animate({
+            fit: {
+                eles: edge,
+                padding: 50
+            }
+        });
+    }
     //endregion
 
     //region Graph data
@@ -341,6 +371,51 @@ class GraphCreatorGraph {
 
     //endregion    
 
+    //region Graph search
+
+    getNodesWithLabel(label) {
+        return this.searchNode('label', label);
+    }
+
+    getEdgesWithLabel(label) {
+        return this.searchEdge('label', label);
+    }
+
+    searchNode(property, value) {
+        let nodes = [];
+        let cyNodes = this.cy.nodes(`[${property}@*="${value}"]`);
+
+        cyNodes.forEach(node => {
+            nodes.push(this.cyToNode(node));
+        })
+        return nodes;
+    }
+
+    searchEdge(property, value) {
+        let edges = [];
+        let cyEdges = this.cy.edges(`[${property}@*="${value}"]`);
+
+        cyEdges.forEach(edge => {
+            edges.push(this.cyToNode(edge));
+        })
+        return edges;
+    }
+
+    search(element, property, value) {
+        let elements = [];
+        switch (element) {
+            case 'node':
+                elements = this.searchNode(property, value);
+                break;
+            case 'edge':
+                elements = this.searchEdge(property, value);
+                break;
+        }
+        return elements;
+    }
+
+    //endregion
+
     //region Node gestion
     get lastNodeId() {
         var nodes = this.nodes;
@@ -367,7 +442,11 @@ class GraphCreatorGraph {
     }
 
     getNode(nodeId) {
-        return this.cyToNode(this.cy.$(`#${nodeId}`));
+        return this.cyToNode(this.getCyNode(nodeId));
+    }
+
+    getCyNode(nodeId) {
+        return this.cy.$(`#${nodeId}`);
     }
 
     getNodeData(node) {
@@ -435,7 +514,11 @@ class GraphCreatorGraph {
     }
 
     getEdge(edgeId) {
-        return this.cyToEdge(this.cy.$(`#${edgeId}`));
+        return this.cyToEdge(this.getCyEdge(edgeId));
+    }
+
+    getCyEdge(edgeId) {
+        return this.cy.$(`#${edgeId}`);
     }
 
     getEdgeData(edge) {
@@ -443,7 +526,7 @@ class GraphCreatorGraph {
     }
 
     updateEdgeProperty(edgeId, property, value) {
-        let edge = this.cy.$(`#${edgeId}`);
+        let edge = this.getCyEdge(edgeId);
         edge.data(property, value);
         this.saveToStorage();
     }
