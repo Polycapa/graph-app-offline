@@ -27,7 +27,7 @@
         </div>
         <paper-listbox>
             <template is="dom-repeat" items="{{items}}" as=item index-as=index filter="{{_filter(search)}}">
-                <paper-item>[[_itemDisplay(item)]]</paper-item>
+                <paper-item on-click="_itemSelected">[[_itemDisplay(item)]]</paper-item>
             </template>
         </paper-listbox>
 
@@ -100,6 +100,19 @@
                         return property.indexOf(search) !== -1;
                     } else {
                         return property == search;
+                    }
+                }
+            }
+
+            _itemSelected(e) {
+                let item = e.model.item;
+                for (let data of this.items) {
+                    if (data === item) {
+                        let event = new CustomEvent('item-selected', {
+                            detail: data
+                        });
+                        this.dispatchEvent(event);
+                        break;
                     }
                 }
             }
