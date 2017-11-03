@@ -19,7 +19,8 @@
             }
         </style>
 
-        <div on-track="handleTrack" id="drag" on-mousedown="saveMouseRelativePos" on-mouseup="resetMouseRelativePos">
+        <div on-track="handleTrack" id="drag" on-mousedown="saveMouseRelativePos" on-touchstart="saveMouseRelativePos" on-mouseup="resetMouseRelativePos"
+            on-touchend="resetMouseRelativePos">
             <slot></slot>
         </div>
 
