@@ -21,7 +21,7 @@
         </style>
 
         <div>
-            <paper-input label="Search" value="{{search::input}}">
+            <paper-input label="[[label]]" value="{{search::input}}">
                 <paper-icon-button icon="clear" slot="suffix" on-click="clear" hidden$="{{!search}}"></paper-icon-button>
             </paper-input>
         </div>
@@ -55,6 +55,10 @@
              */
             static get properties() {
                 return {
+                    label: {
+                        type: String,
+                        value: 'Search'
+                    },
                     search: {
                         type: String,
                         value: '',
