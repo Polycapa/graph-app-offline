@@ -200,6 +200,12 @@
           color: 'white',
           action: this.exportPNG.bind(this),
           tooltip: 'Show/hide legends list'
+        }, {
+          text: 'Export file',
+          background: 'var(--paper-amber-500)',
+          color: 'white',
+          action: this.exportJSON.bind(this),
+          tooltip: 'Show/hide legends list'
         }];
 
         this.$.optionsWindow.options = [{
@@ -283,6 +289,14 @@
 
         let key = this.graph.localStorageKey || 'graph';
         saveAs(pngBlob, `${key}.png`)
+      }
+
+      exportJSON() {
+        let blob = new Blob([JSON.stringify(this.graph.json)], {
+          type: 'application/json'
+        });
+        let key = this.graph.localStorageKey || 'graph';
+        saveAs(blob, `${key}.json`);
       }
     }
 
