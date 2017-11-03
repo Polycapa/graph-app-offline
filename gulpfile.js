@@ -2,12 +2,15 @@ const gulp = require('gulp');
 const shell = require('gulp-shell');
 const clean = require('gulp-clean');
 const filter = require('gulp-filter');
+const replace = require('gulp-replace');
 const del = require('del');
 const browserSync = require('browser-sync');
 
 const src = './';
 const dist = './dist';
-const filesToWatch = [`${src}/src/**/*`];
+const filesToWatch = [`${src}src/**/*`, `${src}index.html`];
+
+const baseUrl = '/graph/';
 
 const polymerBuildFolder = `${src}/build`;
 const polymerPreset = 'es6-bundled';
@@ -21,6 +24,14 @@ gulp.task('polymer-build', ['create-polymer-build'], function () {
     return gulp.src(polymerPresetFolder)
         .pipe(gulp.dest(`${dist}`));
 });
+
+gulp.task('replace-build-base-url', ['polymer-build'], () => {
+    gulp.src(`${dist}/index.html`)
+        .pipe(replace(/\<base.*?\>/, match => {
+            return `<base href="${baseUrl}">`;
+        }))
+        .pipe(gulp.dest(dist));
+})
 
 gulp.task('clean:dist', () => {
     return del([dist])
@@ -48,7 +59,7 @@ gulp.task('browser-sync', () => {
     })
 })
 
-gulp.task('build', ['polymer-build']);
+gulp.task('build', ['replace-build-base-url']);
 
 
 gulp.task('default', ['build']);
