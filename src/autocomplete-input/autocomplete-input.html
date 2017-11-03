@@ -62,7 +62,8 @@
                     },
                     items: {
                         type: Object,
-                        value: () => []
+                        value: () => [],
+                        observer: 'clear'
                     },
                     searchProperty: String,
                     displayAll: {
