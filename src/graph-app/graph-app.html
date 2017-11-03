@@ -8,6 +8,7 @@
 <link rel="import" href="../option-window/option-window.html">
 <link rel="import" href="../copy-window/copy-window.html">
 <link rel="import" href="../search-window/search-window.html">
+<link rel="import" href="../path-window/path-window.html">
 
 <dom-module id="graph-app">
   <template>
@@ -31,6 +32,7 @@
     <graph-loader save-position storage-key="graph-list" on-delete-graph="_resetGraph" on-select-graph="_changeGraph" id="loader"></graph-loader>
     <option-window id="optionsWindow" save-position></option-window>
     <search-window id="searchWindow" save-position on-search="_handleSearch" on-item-selected="_handleSearchSelected"></search-window>
+    <path-window id="pathWindow" save-position></path-window>
 
     <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode">
     </node-dialog>
