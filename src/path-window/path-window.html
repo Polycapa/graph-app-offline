@@ -41,6 +41,7 @@
                 height: 50px;
                 margin: 5px;
                 text-align: center;
+                cursor: pointer;
             }
 
             .edge-body {
@@ -91,7 +92,8 @@
                                 </template>
 
                                 <template is="dom-if" if="{{!item.source}}">
-                                    <div class="node horizontal center center-justified layout" style$="background-color: {{item.color}};" on-click="_center">
+                                    <div class="node horizontal center center-justified layout" style$="background-color: {{item.color}};" on-click="_center"
+                                        data-id$="{{item.fullId}}">
                                         [[item.label]]
                                     </div>
                                 </template>
@@ -235,7 +237,10 @@
             }
 
             _center(e) {
-                let item = this.items[e.model.index];
+                let id = e.target.getAttribute('data-id');
+                this.emit('center', {
+                    id: id
+                })
             }
 
             _savePosition(e) {
