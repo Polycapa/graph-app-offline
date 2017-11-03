@@ -357,6 +357,7 @@ class GraphCreatorGraph {
                 data = JSON.parse(data);
                 this.json = data;
                 this.loadGroups(data);
+                this.center();
             } else {
                 this.init();
             }
@@ -400,6 +401,7 @@ class GraphCreatorGraph {
     loadData(data) {
         this.json = data;
         this.loadGroups(data);
+        this.center();
     }
 
     //endregion
