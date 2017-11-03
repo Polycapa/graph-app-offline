@@ -44,5 +44,5 @@ Functionalities
     - Insert edge mode
     - Delete node mode
     - Delete edge mode
-- [ ] Node search
-- [ ] Edge search
+- [x] Node search
+- [x] Edge search
