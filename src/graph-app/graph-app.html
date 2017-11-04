@@ -81,7 +81,6 @@
         let graphData = url.searchParams.get('graph');
         if (graphData) {
           graphData = decodeURIComponent(graphData);
-          // console.log(graphData);
           try {
             graphData = JSON.parse(graphData);
             this.graph.loadData(graphData);
@@ -201,6 +200,18 @@
           background: 'var(--paper-red-700)',
           color: 'white',
           action: this.graph.redo.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Toggle nodes label',
+          background: 'var(--paper-red-700)',
+          color: 'white',
+          action: this.graph.toggleNodesLabel.bind(this.graph),
+          tooltip: 'Center graph on existing nodes'
+        }, {
+          text: 'Toggle edges label',
+          background: 'var(--paper-red-700)',
+          color: 'white',
+          action: this.graph.toggleEdgesLabel.bind(this.graph),
           tooltip: 'Center graph on existing nodes'
         }];
 

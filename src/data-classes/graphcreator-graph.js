@@ -58,11 +58,13 @@ class GraphCreatorGraph {
                     'mid-target-arrow-shape': 'data(arrowShape)',
                     'mid-target-arrow-color': 'data(arrowColor)',
                     'mid-target-arrow-fill': 'filled',
-                    'arrow-scale': 2,
+                    'arrow-scale': 1,
                     'label': 'data(label)',
                     'color': 'black',
                     'text-rotation': 'autorotate',
-                    'text-margin-y': -15
+                    'text-margin-y': -15,
+                    'font-size': 10,
+                    'min-zoomed-font-size': 20
                 }
             }, {
                 selector: 'node.selected',
@@ -75,6 +77,11 @@ class GraphCreatorGraph {
                 style: {
                     'width': 10,
                     'line-style': 'dashed'
+                }
+            }, {
+                selector: '.no-label',
+                style: {
+                    'font-size': 0
                 }
             }]
         });
@@ -171,6 +178,18 @@ class GraphCreatorGraph {
                 padding: 50
             }
         });
+    }
+
+    toggleElementLabel(id) {
+        this.cy.$(`#${id}`).toggleClass('no-label');
+    }
+
+    toggleNodesLabel() {
+        this.cy.nodes().toggleClass('no-label');
+    }
+
+    toggleEdgesLabel() {
+        this.cy.edges().toggleClass('no-label');
     }
     //endregion
 
