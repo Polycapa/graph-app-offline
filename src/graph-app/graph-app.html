@@ -392,6 +392,7 @@
               let data = reader.result;
               try {
                 this.graph.loadData(JSON.parse(data));
+                this.graph.saveToStorage();
               } catch (e) {
                 console.error(e);
               }
