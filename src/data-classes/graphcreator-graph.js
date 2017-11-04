@@ -928,11 +928,13 @@ class GraphCreatorGraph {
     //region Undo redo
 
     undo() {
-        return this.undoRedo.undo();
+        this.undoRedo.undo();
+        this.saveToStorage();
     }
 
     redo() {
-        return this.undoRedo.redo();
+        this.undoRedo.redo();
+        this.saveToStorage();
     }
     //endregion
 
