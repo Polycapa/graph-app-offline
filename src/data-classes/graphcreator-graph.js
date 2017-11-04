@@ -64,7 +64,9 @@ class GraphCreatorGraph {
                     'text-rotation': 'autorotate',
                     'text-margin-y': -15,
                     'font-size': 10,
-                    'min-zoomed-font-size': 20
+                    'min-zoomed-font-size': 20,
+                    "curve-style": "bezier",
+                    "control-point-step-size": 40
                 }
             }, {
                 selector: 'node.selected',
