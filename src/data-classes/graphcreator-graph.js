@@ -767,13 +767,46 @@ class GraphCreatorGraph {
         this.saveToStorage();
     }
 
+    removeGroup(id) {
+        let nodes = [];
+        let edges = [];
+
+        let children = this.search('node', 'parent', id);
+
+        if (children.length === 0) {
+            // If node is not a group, just remove it
+            this.remove(id);
+        }
+
+        for (let node of children) {
+            nodes.push(node);
+            let nodeEdges = this.getEdgesWithNode(node.fullId);
+            edges = edges.concat(nodeEdges);
+        }
+
+        this.remove(id);
+
+        for (let node of nodes) {
+            this.addNode(node.x, node.y, node.label, node.color, '', node.fullId);
+        }
+
+        for (let edge of edges) {
+            this.addEdge(edge.source, edge.target, edge.color, edge.label, edge.oriented, edge.arrowColor);
+        }
+
+        this.saveToStorage();
+    }
+
     //endregion
 
     //region Event handling
 
     _nodeClick(e) {
 
-        if (this.mode !== 'select' && this.mode !== 'add-edge' && this.mode !== 'delete' && this.mode !== 'add-group') {
+        if (this.mode !== 'select' &&
+            this.mode !== 'add-edge' &&
+            this.mode !== 'delete' &&
+            this.mode !== 'add-group') {
             return;
         }
 
@@ -831,7 +864,7 @@ class GraphCreatorGraph {
                 this.beforeGroupCreation(selectedNodes, mousePosition);
                 break;
             case 'delete':
-                this.remove(this.getNodeData(node).id);
+                this.removeGroup(this.getNodeData(node).id);
                 break;
             default:
 
