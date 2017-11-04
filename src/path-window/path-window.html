@@ -62,7 +62,7 @@
         </iron-media-query>
 
         <dragdrop-window id="dragdrop" top="{{top}}" left="{{left}}" on-drag-end="_savePosition">
-            <action-window id="actionWindow" close-button reduce-button reduced="[[!largeScreen]]">
+            <action-window id="actionWindow" close-button closed reduce-button reduced="[[!largeScreen]]">
                 <div slot="title">Path finder</div>
                 <div class="horizontal around-justified layout">
                     <autocomplete-input items="[[nodes]]" search-property="label" class="flex" label="Start node" on-item-selected="_setStartNode"
