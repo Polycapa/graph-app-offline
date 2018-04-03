@@ -13,7 +13,7 @@
 <dom-module id="graph-app">
   <template>
     <style>
-       :host {
+      :host {
         display: block;
         --graph-background: white;
       }
@@ -34,7 +34,7 @@
     <search-window id="searchWindow" save-position on-search="_handleSearch" on-item-selected="_handleSearchSelected"></search-window>
     <path-window id="pathWindow" save-position on-get-path="_getPath" on-center="_centerOn"></path-window>
 
-    <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode">
+    <node-dialog id="nodeDialog" on-add-node="_addNode" on-edit-node="_editNode" legends="[[legends]]">
     </node-dialog>
     <edge-dialog id="edgeDialog" on-add-edge="_addEdge" on-edit-edge="_editEdge" legends="[[legends]]"></edge-dialog>
     <group-dialog id="groupDialog" on-add-group="_addGroup"></group-dialog>

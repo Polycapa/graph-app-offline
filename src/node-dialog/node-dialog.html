@@ -10,7 +10,7 @@
 <dom-module id="node-dialog">
     <template>
         <style include="shared-styles">
-             :host {
+            :host {
                 display: block;
             }
 
@@ -44,6 +44,15 @@
             .inputs {
                 padding: 5px;
             }
+
+            .chip {
+                color: white;
+                border-radius: 10%;
+                padding: 10px;
+                font-size: 15px;
+                margin: 3px;
+                cursor: pointer;
+            }
         </style>
 
         <dragdrop-window top="100" left="100" id="dragdrop">
@@ -55,15 +64,19 @@
                 <div class="inputs">
                     <paper-input label="Label" id="labelInput" class="input" value="{{data.label::input}}" always-float-label>
                     </paper-input>
-                    <div class="horizontal center layout input">
-                        <label for="color">Node color</label>
-                        <paper-swatch-picker id="colorInput" color="{{data.color}}">
-                        </paper-swatch-picker>
-                    </div>
+                    <div class="horizontal center around-justified wrap layout">
+                        <template is="dom-repeat" items="{{legends}}" as=item index-as=index filter="{{autocompleteFilter(data.label)}}">
+                            <div class="chip" style$="background-color:{{item.color}}" on-click="_autocompleteSelected" data-item$="{{item.label}}-{{item.color}}">[[item.label]]</div>
+                        </template>
+                    </div <div class="horizontal center layout input">
+                    <label for="color">Node color</label>
+                    <paper-swatch-picker id="colorInput" color="{{data.color}}">
+                    </paper-swatch-picker>
+                </div>
 
-                    <div class="horizontal center center-justified layout">
-                        <paper-button on-click="save">Save</paper-button>
-                    </div>
+                <div class="horizontal center center-justified layout">
+                    <paper-button on-click="save">Save</paper-button>
+                </div>
                 </div>
             </action-window>
         </dragdrop-window>
@@ -106,6 +119,19 @@
                     isEditing: {
                         type: Boolean,
                         value: false
+                    },
+                    legends: {
+                        type: Object,
+                        value: () => {
+                            return []
+                        },
+                        observer: 'setAutocompleteLegends'
+                    },
+                    autocompleteLegends: {
+                        type: Object,
+                        value: () => {
+                            return []
+                        }
                     }
                 };
             }
@@ -171,6 +197,45 @@
                         y: node.data.y
                     }, mousePosition,
                     true);
+            }
+
+            setAutocompleteLegends() {
+                let legends = [];
+
+                for (let legend of this.legends) {
+                    legends.push({
+                        text: legend.label,
+                        value: legend.color
+                    })
+                }
+
+                this.set('autocompleteLegends', legends);
+                this.$.labelInput.source = legends;
+            }
+
+            _autocompleteSelected(e) {
+                let target = e.target;
+                let data = e.target.getAttribute('data-item').split('-');
+                let item;
+
+                for (let legend of this.legends) {
+                    if (legend.label === data[0] && legend.color === data[1]) {
+                        item = legend;
+                        break;
+                    }
+                }
+
+                this.set('data.label', item.label);
+                this.$.labelInput.value = item.label;
+                this.$.colorInput.color = item.color;
+                this.data.color = item.value;
+            }
+
+            autocompleteFilter(search) {
+                return (item) => {
+                    return item.label.toLowerCase().indexOf(this.$.labelInput.value.toLowerCase()) !== -1 ||
+                        this.$.labelInput.value === '';
+                }
             }
         }
 
